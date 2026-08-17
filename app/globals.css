@@ -1,0 +1,257 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-heading: var(--font-display);
+
+  /* IDE chrome surfaces */
+  --color-chrome: var(--chrome);
+  --color-editor: var(--editor);
+  --color-hover: var(--hover);
+
+  /* Brand identity pair */
+  --color-brand: var(--brand);
+  --color-brand-2: var(--brand-2);
+
+  /* Editor syntax palette */
+  --color-syntax-green: var(--syntax-green);
+  --color-syntax-orange: var(--syntax-orange);
+  --color-syntax-purple: var(--syntax-purple);
+  --color-syntax-red: var(--syntax-red);
+  --color-syntax-yellow: var(--syntax-yellow);
+  --color-syntax-blue: var(--syntax-blue);
+
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/*
+ * ============================================================
+ * THEME — both palettes live in these two blocks and nowhere
+ * else. `:root` is the light theme; `.dark` overrides it.
+ * The class is applied by the inline script in app/layout.tsx
+ * before first paint, so there's no flash of the wrong theme.
+ * ============================================================
+ */
+:root {
+  color-scheme: light;
+  --radius: 0.375rem;
+
+  /* Surfaces, lightest to darkest */
+  --editor: #ffffff; /* editor pane */
+  --background: #ffffff;
+  --sidebar: #f6f8fa; /* explorer, assistant panel */
+  --card: #f6f8fa;
+  --popover: #ffffff;
+  --chrome: #eef1f4; /* title bar, activity bar, status bar */
+  --hover: #e6eaef; /* row hover in lists */
+  --scrollbar: #c9d1d9;
+  --scrollbar-hover: #aeb8c2;
+
+  /* Text */
+  --foreground: #1f2328;
+  --card-foreground: #1f2328;
+  --popover-foreground: #1f2328;
+  --muted-foreground: #59636e; /* comments, paths, meta */
+
+  /* Lines */
+  --border: #d1d9e0;
+  --input: #d1d9e0;
+  --sidebar-border: #d1d9e0;
+
+  /* Identity pair — darker than the dark theme's so they hold on white */
+  --brand: #0e7490; /* cyan */
+  --brand-2: #4f46e5; /* indigo */
+
+  /* shadcn semantic roles */
+  --primary: #0e7490;
+  --primary-foreground: #ffffff;
+  --secondary: #e6eaef;
+  --secondary-foreground: #1f2328;
+  --muted: #e6eaef;
+  --accent: #e6eaef; /* NOTE: a hover surface, not the brand color */
+  --accent-foreground: #1f2328;
+  --destructive: #cf222e;
+  --ring: #0e7490;
+
+  --sidebar-foreground: #1f2328;
+  --sidebar-primary: #0e7490;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #e6eaef;
+  --sidebar-accent-foreground: #1f2328;
+  --sidebar-ring: #0e7490;
+
+  /* Syntax highlighting — GitHub Light values, all ≥ 4.5:1 on white */
+  --syntax-green: #116329;
+  --syntax-orange: #953800;
+  --syntax-purple: #6639ba;
+  --syntax-red: #a40e26;
+  --syntax-yellow: #7d4e00;
+  --syntax-blue: #0550ae;
+
+  --chart-1: var(--brand);
+  --chart-2: var(--brand-2);
+  --chart-3: var(--syntax-green);
+  --chart-4: var(--syntax-orange);
+  --chart-5: var(--syntax-purple);
+}
+
+.dark {
+  color-scheme: dark;
+
+  /* Surfaces, darkest to lightest */
+  --chrome: #0d1117;
+  --sidebar: #0f141a;
+  --editor: #11161d;
+  --background: #11161d;
+  --card: #151b24;
+  --popover: #151b24;
+  --hover: #1a212b;
+  --scrollbar: #2b3441;
+  --scrollbar-hover: #3a4553;
+
+  /* Text */
+  --foreground: #e6edf3;
+  --card-foreground: #e6edf3;
+  --popover-foreground: #e6edf3;
+  --muted-foreground: #7d8590;
+
+  /* Lines */
+  --border: #1f2630;
+  --input: #1f2630;
+  --sidebar-border: #1f2630;
+
+  /* Identity pair */
+  --brand: #22d3ee;
+  --brand-2: #6366f1;
+
+  /* shadcn semantic roles */
+  --primary: #22d3ee;
+  --primary-foreground: #06232a;
+  --secondary: #1a212b;
+  --secondary-foreground: #e6edf3;
+  --muted: #1a212b;
+  --accent: #1a212b;
+  --accent-foreground: #e6edf3;
+  --destructive: #ff7b72;
+  --ring: #22d3ee;
+
+  --sidebar-foreground: #e6edf3;
+  --sidebar-primary: #22d3ee;
+  --sidebar-primary-foreground: #06232a;
+  --sidebar-accent: #1a212b;
+  --sidebar-accent-foreground: #e6edf3;
+  --sidebar-ring: #22d3ee;
+
+  /* Syntax highlighting */
+  --syntax-green: #7ee787;
+  --syntax-orange: #ffa657;
+  --syntax-purple: #d2a8ff;
+  --syntax-red: #ff7b72;
+  --syntax-yellow: #e3b341;
+  --syntax-blue: #79c0ff;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-mono;
+  }
+
+  /* Editor-style scrollbars */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--scrollbar);
+    border: 2px solid transparent;
+    background-clip: content-box;
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-hover);
+    background-clip: content-box;
+  }
+}
+
+/* Blinking terminal caret used in the hero tagline. */
+@keyframes caret-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+.caret {
+  animation: caret-blink 1.1s step-end infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .caret {
+    opacity: 1;
+  }
+}
