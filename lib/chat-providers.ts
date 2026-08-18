@@ -40,6 +40,8 @@ const ANTHROPIC_MODEL =
 interface StreamArgs {
   locale: Locale;
   history: ChatMessage[];
+  /** Aborts when the visitor disconnects, so we stop paying for the answer. */
+  signal?: AbortSignal;
 }
 
 export interface ChatProvider {
@@ -89,7 +91,7 @@ function geminiProvider(apiKey: string): ChatProvider {
   return {
     id: "gemini",
     model: GEMINI_MODEL,
-    async *stream({ locale, history }) {
+    async *stream({ locale, history, signal }) {
       const response = await client.models.generateContentStream({
         model: GEMINI_MODEL,
         // Gemini names the assistant turn "model"; everything else matches.
@@ -101,6 +103,7 @@ function geminiProvider(apiKey: string): ChatProvider {
           systemInstruction: systemPrompt(locale),
           maxOutputTokens: MAX_TOKENS,
           thinkingConfig: geminiThinking(GEMINI_MODEL),
+          abortSignal: signal,
         },
       });
 
@@ -139,24 +142,27 @@ function anthropicProvider(apiKey: string): ChatProvider {
   return {
     id: "anthropic",
     model: ANTHROPIC_MODEL,
-    async *stream({ locale, history }) {
-      const modelStream = client.messages.stream({
-        model: ANTHROPIC_MODEL,
-        max_tokens: MAX_TOKENS,
-        // Adaptive thinking stays on (the default on this model). `medium`
-        // effort buys the cross-referencing a substantive answer needs; `low`
-        // tended to grab the first matching line in the brief and stop.
-        output_config: { effort: "medium" },
-        system: [
-          {
-            type: "text",
-            text: systemPrompt(locale),
-            // The brief is identical on every request, so cache it.
-            cache_control: { type: "ephemeral" },
-          },
-        ],
-        messages: history,
-      });
+    async *stream({ locale, history, signal }) {
+      const modelStream = client.messages.stream(
+        {
+          model: ANTHROPIC_MODEL,
+          max_tokens: MAX_TOKENS,
+          // Adaptive thinking stays on (the default on this model). `medium`
+          // effort buys the cross-referencing a substantive answer needs;
+          // `low` tended to grab the first matching line and stop.
+          output_config: { effort: "medium" },
+          system: [
+            {
+              type: "text",
+              text: systemPrompt(locale),
+              // The brief is identical on every request, so cache it.
+              cache_control: { type: "ephemeral" },
+            },
+          ],
+          messages: history,
+        },
+        { signal },
+      );
 
       for await (const event of modelStream) {
         if (

@@ -122,6 +122,7 @@ const en = {
     unavailable: "The assistant is unavailable right now.",
     rateLimited:
       "That's the question limit for now — email me directly and I'll reply properly.",
+    busy: "The assistant has answered all it can today. Email me and I'll reply properly.",
     refused: "I can't answer that one. Try asking about the work, or email me.",
     failed:
       "\n\nSomething went wrong on my end. Please try again, or email me directly.",
@@ -249,6 +250,7 @@ const fr: Dictionary = {
     unavailable: "L'assistant est indisponible pour le moment.",
     rateLimited:
       "C'est la limite de questions pour l'instant — écrivez-moi directement et je répondrai comme il faut.",
+    busy: "L'assistant a répondu à tout ce qu'il pouvait aujourd'hui. Écrivez-moi et je répondrai comme il faut.",
     refused:
       "Je ne peux pas répondre à celle-là. Posez-moi une question sur le travail, ou écrivez-moi.",
     failed:

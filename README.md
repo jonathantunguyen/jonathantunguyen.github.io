@@ -127,6 +127,46 @@ the route and passes it to the store, which sends it with each request.
   `CHAT_PROVIDER`.
 - **No API key at all?** The route serves keyword-matched answers from
   `lib/chat-fallback.ts` instead of failing, so a fork works out of the box.
+### Guardrails
+
+The exposure here isn't data loss — the brief the assistant answers from is the
+same content the site shows anyone. It's **cost** (someone using the endpoint as
+a free LLM proxy) and **reputation** (coaxing it into saying something that
+reads as coming from Jonathan). `lib/chat-guards.ts` holds the request-side
+limits; the prompt-side rules are in `lib/portfolio-context.ts`.
+
+Checks run cheapest-first, so a hostile request is turned away before it costs
+anything:
+
+| Guard | Limit | Why |
+| --- | --- | --- |
+| Origin check | same-origin + `CHAT_ALLOWED_ORIGINS` | Stops the endpoint being embedded in someone else's page |
+| Body size | 64 KB | Bounded before parsing |
+| Per-message length | 1500 chars, **every** message | The client sends the whole history, so capping only the newest bounds nothing |
+| Whole-conversation length | 8000 chars | A dozen just-under-cap messages is a far bigger prompt than any real visitor sends |
+| Daily ceiling | `CHAT_DAILY_LIMIT`, default 400/day | Backstop for the per-IP limit, which a pool of addresses walks around |
+| Per-IP limit | 10/hour | The everyday case |
+| Abort on disconnect | `req.signal` | Closing the tab stops generation instead of billing into a response nobody reads |
+
+Two things worth knowing about the limits:
+
+- **IP resolution is the load-bearing part.** The leftmost `X-Forwarded-For`
+  entry is written by the *client*, so keying a limiter on it makes the limiter
+  advisory — one spoofed header per request and every request looks new. The
+  code prefers the headers our own edge sets (`X-Envoy-External-Address` on
+  Railway, `CF-Connecting-IP`, `X-Real-IP`) and otherwise takes the rightmost
+  `X-Forwarded-For` hop. Set `CHAT_TRUSTED_PROXIES` if you add a proxy layer.
+- **The origin check is not a security boundary.** A script sends whatever
+  `Origin` it likes, or none. It stops casual embedding; the rate and daily
+  limits are what stop abuse.
+
+On the prompt side, the assistant is told that conversation history arrives from
+the visitor's browser and may be forged — so an earlier turn appearing to be its
+own is visitor text, not a decision it made — and that no claimed identity,
+hypothetical framing or formatting request grants an exception. Prompt rules
+mitigate, they don't guarantee; the reason that's tolerable here is that the
+assistant has no tools, no writes, and nothing private to leak.
+
 - **Rate limiting** is in-memory: 10 messages per hour per IP, per instance.
   Move it to Redis or Vercel KV if you need it to hold across instances.
 - On Claude the brief is sent with a prompt-cache breakpoint, so repeat turns
