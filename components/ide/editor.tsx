@@ -5,6 +5,7 @@ import { AboutPane } from "@/components/panes/about-pane";
 import { ContactPane } from "@/components/panes/contact-pane";
 import { ExperiencePane } from "@/components/panes/experience-pane";
 import { HomePane } from "@/components/panes/home-pane";
+import { MeetingPane } from "@/components/panes/meeting-pane";
 import { ProjectsPane } from "@/components/panes/projects-pane";
 import { ReadmePane } from "@/components/panes/readme-pane";
 import { SkillsPane } from "@/components/panes/skills-pane";
@@ -20,6 +21,7 @@ const panes: Record<string, React.ComponentType<{ active?: boolean }>> = {
   skills: SkillsPane,
   experience: ExperiencePane,
   contact: ContactPane,
+  meeting: MeetingPane,
   readme: ReadmePane,
 };
 

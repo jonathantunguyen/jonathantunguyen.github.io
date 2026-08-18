@@ -6,7 +6,16 @@
 
 import { profile } from "@/data/profile";
 
-export type FileExt = "tsx" | "html" | "js" | "json" | "ts" | "css" | "md" | "pdf";
+export type FileExt =
+  | "tsx"
+  | "html"
+  | "js"
+  | "json"
+  | "ts"
+  | "css"
+  | "md"
+  | "ics"
+  | "pdf";
 
 export interface FileEntry {
   /** Stable key used for tab identity and the URL hash. */
@@ -74,6 +83,14 @@ export const files: FileEntry[] = [
     ext: "css",
     path: ["styles"],
     label: "Contact",
+    kind: "pane",
+  },
+  {
+    id: "meeting",
+    name: "meeting.ics",
+    ext: "ics",
+    path: [],
+    label: "Book a meeting",
     kind: "pane",
   },
   {

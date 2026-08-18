@@ -55,6 +55,7 @@ const en = {
     theme: "Switch theme",
     language: "Language",
     askAssistant: "Ask the assistant",
+    bookMeeting: "Book a meeting…",
     aboutSite: "About this site",
     elsewhere: "Elsewhere",
   },
@@ -156,6 +157,23 @@ const en = {
     contactElsewhere: "Elsewhere",
     contactResume: "Résumé",
     contactAskAssistant: "Ask my assistant",
+    contactBook: "Book a meeting",
+    meetingComment: "find a time that works",
+    meetingHeading: "Book A Meeting",
+    meetingIntro:
+      "If it's easier to talk than to type, pick a slot. I'll come prepared — send a line about what you'd like to cover when you book and I'll read it beforehand.",
+    meetingGoodFor: "Good for",
+    meetingDurationLabel: "Length",
+    meetingDuration: (minutes: number) => `${minutes} minutes`,
+    meetingTimezoneLabel: "Timezone",
+    meetingLoad: "Show the calendar",
+    meetingOpen: "Open in a new tab",
+    meetingPrivacy: (provider: string) =>
+      `The calendar is hosted by ${provider}. It loads only when you ask it to, so nothing third-party runs here unless you want to book.`,
+    meetingLoadedNote: (provider: string) =>
+      `Calendar by ${provider} — booking and reminders are handled there.`,
+    meetingUnset:
+      "The booking calendar isn't connected yet. Email me and we'll find a time the old-fashioned way.",
     readmeIntro:
       "This portfolio is laid out like a code editor. The files in the sidebar are the sections of the site — open them the way you'd open a file. The panel on the right is an assistant that answers questions about my work using the same content you can read here.",
     readmeBuiltWith: "Built with",
@@ -192,6 +210,7 @@ const fr: Dictionary = {
     theme: "Changer de thème",
     language: "Langue",
     askAssistant: "Demander à l'assistant",
+    bookMeeting: "Réserver un créneau…",
     aboutSite: "À propos de ce site",
     elsewhere: "Ailleurs",
   },
@@ -294,6 +313,23 @@ const fr: Dictionary = {
     contactElsewhere: "Ailleurs",
     contactResume: "CV",
     contactAskAssistant: "Demander à mon assistant",
+    contactBook: "Réserver un créneau",
+    meetingComment: "trouver un créneau qui convient",
+    meetingHeading: "Réserver Un Créneau",
+    meetingIntro:
+      "Si c'est plus simple d'en parler que de l'écrire, choisissez un créneau. J'arriverai préparé — indiquez en une ligne ce que vous souhaitez aborder et je le lirai avant.",
+    meetingGoodFor: "Utile pour",
+    meetingDurationLabel: "Durée",
+    meetingDuration: (minutes: number) => `${minutes} minutes`,
+    meetingTimezoneLabel: "Fuseau horaire",
+    meetingLoad: "Afficher le calendrier",
+    meetingOpen: "Ouvrir dans un nouvel onglet",
+    meetingPrivacy: (provider: string) =>
+      `Le calendrier est hébergé par ${provider}. Il ne se charge que si vous le demandez : rien de tiers ne s'exécute ici sans votre accord.`,
+    meetingLoadedNote: (provider: string) =>
+      `Calendrier fourni par ${provider} — la réservation et les rappels s'y passent.`,
+    meetingUnset:
+      "Le calendrier de réservation n'est pas encore connecté. Écrivez-moi et nous trouverons un créneau à l'ancienne.",
     readmeIntro:
       "Ce portfolio est présenté comme un éditeur de code. Les fichiers de la barre latérale sont les sections du site — ouvrez-les comme vous ouvririez un fichier. Le panneau de droite est un assistant qui répond aux questions sur mon travail à partir du même contenu que celui affiché ici.",
     readmeBuiltWith: "Réalisé avec",

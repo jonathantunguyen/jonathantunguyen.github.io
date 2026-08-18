@@ -25,6 +25,7 @@ const languages: Record<FileExt, string> = {
   html: "HTML",
   css: "CSS",
   md: "Markdown",
+  ics: "iCalendar",
   pdf: "PDF",
 };
 

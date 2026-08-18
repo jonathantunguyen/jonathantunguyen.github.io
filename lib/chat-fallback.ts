@@ -9,6 +9,7 @@
  * Blank lines are meaningful — the panel renders with `whitespace-pre-wrap`.
  */
 
+import { booking, bookingEnabled } from "@/data/booking";
 import { roles } from "@/data/experience";
 import { fullName, profile } from "@/data/profile";
 import { projects } from "@/data/projects";
@@ -197,6 +198,51 @@ const canned: Canned[] = [
   },
   {
     keywords: [
+      "meeting",
+      "book",
+      "booking",
+      "call",
+      "schedule",
+      "chat",
+      "rendez-vous",
+      "créneau",
+      "réserver",
+      "appel",
+      "discuter",
+    ],
+    answer: (locale) => {
+      const p = <T,>(v: L<T>) => pick(v, locale);
+      const goodFor = lines(
+        ...p(booking.goodFor).map((item) => `- ${clean(item)}`),
+      );
+
+      if (!bookingEnabled) {
+        return locale === "fr"
+          ? paragraphs(
+              `Le calendrier de réservation n'est pas encore connecté. Écrivez à ${profile.email} et ${profile.firstName} trouvera un créneau avec vous.`,
+              goodFor,
+            )
+          : paragraphs(
+              `The booking calendar isn't connected yet. Email ${profile.email} and ${profile.firstName} will find a time with you.`,
+              goodFor,
+            );
+      }
+
+      return locale === "fr"
+        ? paragraphs(
+            `Vous pouvez réserver un appel de ${booking.durationMinutes} minutes ici : ${booking.url} (fuseau ${booking.timezone}).`,
+            goodFor,
+            "meeting.ics dans la barre latérale ouvre le même calendrier dans la page.",
+          )
+        : paragraphs(
+            `You can book a ${booking.durationMinutes}-minute call here: ${booking.url} (timezone ${booking.timezone}).`,
+            goodFor,
+            "meeting.ics in the sidebar opens the same calendar inside the page.",
+          );
+    },
+  },
+  {
+    keywords: [
       "contact",
       "email",
       "reach",
@@ -216,12 +262,18 @@ const canned: Canned[] = [
             `Le meilleur moyen de joindre ${profile.firstName} est ${profile.email}. Basé à ${clean(p(profile.location))}.`,
             clean(p(profile.availability)),
             socialLines(locale, true),
+            bookingEnabled
+              ? `Pour un appel, réservez un créneau : ${booking.url}`
+              : null,
             "contact.css dans la barre latérale reprend tout ceci, et le CV se télécharge depuis la barre d'activité.",
           )
         : paragraphs(
             `The best way to reach ${profile.firstName} is ${profile.email}. Based in ${clean(p(profile.location))}.`,
             clean(p(profile.availability)),
             socialLines(locale, true),
+            bookingEnabled
+              ? `For a call, book a slot: ${booking.url}`
+              : null,
             "contact.css in the sidebar repeats all of this, and the résumé downloads from the activity bar.",
           );
     },

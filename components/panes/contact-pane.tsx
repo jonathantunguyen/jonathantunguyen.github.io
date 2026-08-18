@@ -1,6 +1,6 @@
 "use client";
 
-import { Download, Mail, MapPin, Sparkles } from "lucide-react";
+import { CalendarClock, Download, Mail, MapPin, Sparkles } from "lucide-react";
 import { socialIcons } from "@/components/icon-map";
 import {
   CommentLine,
@@ -15,6 +15,7 @@ import { usePick, useUi } from "@/lib/locale-context";
 
 export function ContactPane() {
   const showPanel = useIde((s) => s.showPanel);
+  const openFile = useIde((s) => s.openFile);
   const ui = useUi();
   const pick = usePick();
 
@@ -49,6 +50,14 @@ export function ContactPane() {
             </a>
           }
         />
+        <Button
+          variant="outline"
+          size="lg"
+          onClick={() => openFile("meeting")}
+        >
+          <CalendarClock data-icon="inline-start" />
+          {ui.panes.contactBook}
+        </Button>
         <Button
           variant="outline"
           size="lg"

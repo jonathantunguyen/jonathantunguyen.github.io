@@ -7,6 +7,7 @@
  * cacheable.
  */
 
+import { booking, bookingEnabled } from "@/data/booking";
 import { education, roles } from "@/data/experience";
 import { fullName, profile } from "@/data/profile";
 import { projects } from "@/data/projects";
@@ -101,6 +102,21 @@ function buildContext(locale: Locale): string {
         ].join("\n"),
       ),
     ].join("\n"),
+  );
+
+  sections.push(
+    bookingEnabled
+      ? [
+          "## Booking a meeting",
+          `Visitors can book a ${booking.durationMinutes}-minute call. The booking page is ${booking.url} and it is also the meeting.ics file in the sidebar.`,
+          `Timezone: ${booking.timezone}.`,
+          "Good for:",
+          ...p(booking.goodFor).map((item) => `- ${clean(item)}`),
+        ].join("\n")
+      : [
+          "## Booking a meeting",
+          "No booking link is configured yet. If someone asks to schedule a call, point them at the email address above — do not invent a scheduling link.",
+        ].join("\n"),
   );
 
   const realSocials = socials.filter((s) => !isPlaceholder(s.href));

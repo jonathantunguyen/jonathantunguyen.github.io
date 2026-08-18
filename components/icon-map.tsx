@@ -62,6 +62,7 @@ const badges: Record<FileExt, { mark: string; className: string }> = {
   html: { mark: "<>", className: "bg-syntax-orange/15 text-syntax-orange" },
   css: { mark: "#", className: "bg-syntax-purple/15 text-syntax-purple" },
   md: { mark: "M↓", className: "bg-brand/15 text-brand" },
+  ics: { mark: "31", className: "bg-syntax-green/15 text-syntax-green" },
   pdf: { mark: "PDF", className: "bg-syntax-red/15 text-syntax-red" },
 };
 

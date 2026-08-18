@@ -97,6 +97,30 @@ keeping the filename — or point `profile.resumePath` somewhere else.
 To rename or reorder the sidebar files, edit `lib/files.ts` and add a matching
 entry to the `panes` map in `components/ide/editor.tsx`.
 
+## Booking a meeting
+
+`meeting.ics` in the sidebar is a booking pane. It's provider-agnostic — all it
+needs is a URL that renders a booking page, which Cal.com, Calendly and Google
+Appointment Schedules all provide:
+
+1. Paste your link into `url` in `data/booking.ts`, replacing the `TODO:` line.
+2. Adjust `provider`, `durationMinutes`, `timezone` and `goodFor` in the same
+   file. `timezone` is currently assumed from the location in `data/profile.ts`.
+
+Until the URL is set, `bookingEnabled` is false and every surface — the pane,
+the contact button, the assistant, the keyword fallback — degrades to "email me"
+rather than showing a broken calendar. Nothing else needs touching: the file
+appears in the explorer, the File menu, quick open and the status bar
+automatically, and the brief tells the assistant not to invent a link.
+
+**The calendar is click-to-load.** Every scheduling provider sets third-party
+cookies and phones home the moment its embed mounts, so an eager iframe would
+track every visitor who never intended to book — on a site with no consent
+banner and mostly European traffic. The visitor gets a short explanation naming
+the provider and a button; the iframe (sandboxed) mounts only after the click,
+and there's a direct link for anyone who'd rather not embed at all. Verified
+with a network trace: zero requests to the embed before the click, one after.
+
 ## The assistant
 
 `app/api/chat/route.ts` streams from whichever provider

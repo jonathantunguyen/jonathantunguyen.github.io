@@ -72,6 +72,9 @@ export function MenuBar() {
               </MenubarItem>
             ))}
           <MenubarSeparator />
+          <MenubarItem onClick={() => openFile("meeting")}>
+            {ui.menu.bookMeeting}
+          </MenubarItem>
           <MenubarItem
             render={
               <a href={profile.resumePath} download>
