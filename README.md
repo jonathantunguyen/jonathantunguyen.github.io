@@ -8,16 +8,17 @@ questions about the work from the same content the site displays.
 
 ```bash
 npm install
-cp .env.example .env.local   # then fill in ANTHROPIC_API_KEY
+cp .env.example .env.local   # then fill in GEMINI_API_KEY
 npm run dev
 ```
 
-`npm run build` produces a static export in `out/`.
+`npm run build` produces a server build in `.next/`; `npm run start` serves it.
+(The `pages` branch is the one that emits a static `out/`.)
 
 ## Deploying
 
 `master` is the deployable branch and needs a Node runtime, because
-`app/api/chat` is what makes the assistant stream from Claude rather than
+`app/api/chat` is what makes the assistant stream from a model rather than
 answer from a keyword index.
 
 ### Railway
@@ -27,13 +28,16 @@ serverless does — see the rate-limiter note below.
 
 1. **New Project → Deploy from GitHub repo**, pick this repo. Railway builds
    `master`.
-2. Nixpacks detects Next.js; `railway.json` pins the build and start commands
+2. Railpack detects Next.js; `railway.json` pins the build and start commands
    anyway, plus a healthcheck on `/`. `engines.node` in `package.json` keeps it
-   off a Node too old for Next 16.
+   off a Node too old for Next 16. Note that Railpack decides static-vs-server
+   by text-matching `next.config.ts` — see the warning in that file before
+   editing its comments.
 3. **Variables** → add:
-   - `ANTHROPIC_API_KEY` — required for real answers. Without it the route
-     still responds, but from `lib/chat-fallback.ts`, so a missing key looks
-     like a working deploy with a duller assistant rather than an error.
+   - `GEMINI_API_KEY` — required for real answers. Without it (and without
+     `ANTHROPIC_API_KEY`) the route still responds, but from
+     `lib/chat-fallback.ts`, so a missing key looks like a working deploy with
+     a duller assistant rather than an error.
    - `NEXT_PUBLIC_SITE_URL` — **only** for a custom domain. Otherwise the build
      reads `RAILWAY_PUBLIC_DOMAIN` and canonical tags, hreflang alternates and
      `sitemap.xml` come out right on their own.
@@ -45,7 +49,7 @@ custom server or Procfile is needed.
 Because the container is long-lived, the in-memory rate limiter in the route
 (10 questions/hour/IP) actually holds between requests. On serverless it resets
 whenever a new instance spins up, which makes it far weaker than it looks.
-Claude tokens bill to your Anthropic account whatever the host.
+Model tokens bill to your Google or Anthropic account whatever the host.
 
 ### Other hosts
 
@@ -95,19 +99,29 @@ entry to the `panes` map in `components/ide/editor.tsx`.
 
 ## The assistant
 
-`app/api/chat/route.ts` streams from Claude (`claude-opus-5`). Its system
-prompt is built in `lib/portfolio-context.ts` from the same `data/` files, and
+`app/api/chat/route.ts` streams from whichever provider
+`lib/chat-providers.ts` selects — **Gemini by default**
+(`gemini-3.7-flash`), or Claude (`claude-opus-5`) with
+`CHAT_PROVIDER=anthropic`. Both get the same brief and both yield plain text,
+so the route never learns which one answered. Override the model per provider
+with `GEMINI_MODEL` / `ANTHROPIC_MODEL`.
+
+The system prompt is built in `lib/portfolio-context.ts` from the `data/` files, and
 it's instructed to answer only from that brief and defer to email otherwise.
 The brief is built per locale and the model is told which language to answer
 in, so a visitor on `/fr` gets a French answer. The panel reads the locale from
 the route and passes it to the store, which sends it with each request.
 
-- **No API key?** The route serves keyword-matched answers from
+- **Only one key set?** The chosen provider falls back to the other one and
+  logs why, so setting just `ANTHROPIC_API_KEY` works without touching
+  `CHAT_PROVIDER`.
+- **No API key at all?** The route serves keyword-matched answers from
   `lib/chat-fallback.ts` instead of failing, so a fork works out of the box.
 - **Rate limiting** is in-memory: 10 messages per hour per IP, per instance.
   Move it to Redis or Vercel KV if you need it to hold across instances.
-- The brief is sent with a prompt-cache breakpoint, so repeat turns in a
-  conversation only pay full price for the new message.
+- On Claude the brief is sent with a prompt-cache breakpoint, so repeat turns
+  only pay full price for the new message. Gemini caches implicitly, and the
+  brief sits in `systemInstruction` where it is eligible.
 
 ## Language
 

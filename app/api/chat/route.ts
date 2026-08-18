@@ -1,11 +1,9 @@
-import Anthropic from "@anthropic-ai/sdk";
 import { cannedAnswer } from "@/lib/chat-fallback";
 import { defaultLocale, isLocale, ui, type Locale } from "@/lib/i18n";
-import { systemPrompt } from "@/lib/portfolio-context";
+import { provider, type ChatMessage } from "@/lib/chat-providers";
 
 export const runtime = "nodejs";
 
-const MODEL = "claude-opus-5";
 /** Visitor messages allowed per window, per IP. */
 const RATE_LIMIT = 10;
 const WINDOW_MS = 60 * 60 * 1000;
@@ -13,11 +11,6 @@ const WINDOW_MS = 60 * 60 * 1000;
 const MAX_INPUT_CHARS = 1500;
 /** Turns of history sent to the model (user + assistant combined). */
 const MAX_HISTORY = 12;
-
-interface ChatMessage {
-  role: "user" | "assistant";
-  content: string;
-}
 
 /**
  * In-memory limiter. Per-instance and cleared on redeploy — enough to stop a
@@ -60,15 +53,6 @@ function textStream(text: string, remaining: number): Response {
     },
   });
 }
-
-const apiKey = process.env.ANTHROPIC_API_KEY;
-if (!apiKey) {
-  console.warn(
-    "[chat] ANTHROPIC_API_KEY is not set — the assistant will serve canned answers.",
-  );
-}
-
-const client = apiKey ? new Anthropic({ apiKey }) : null;
 
 export async function POST(req: Request) {
   let body: unknown;
@@ -122,10 +106,12 @@ export async function POST(req: Request) {
     );
   }
 
-  // No key configured: serve the keyword-matched answer instead of failing.
-  if (!client) {
+  // No provider configured: serve the keyword-matched answer instead of failing.
+  if (!provider) {
     return textStream(cannedAnswer(last.content, locale), remaining);
   }
+  // Pinned to a local so the narrowing survives into the stream callback.
+  const model = provider;
 
   // Keep only the most recent turns; the brief carries the facts, not the history.
   const history = messages.slice(-MAX_HISTORY);
@@ -134,38 +120,11 @@ export async function POST(req: Request) {
   const stream = new ReadableStream<Uint8Array>({
     async start(controller) {
       try {
-        const modelStream = client.messages.stream({
-          model: MODEL,
-          max_tokens: 2048,
-          // Adaptive thinking stays on (the default on this model); `low` effort
-          // keeps a short factual answer from turning into a long deliberation.
-          output_config: { effort: "low" },
-          system: [
-            {
-              type: "text",
-              text: systemPrompt(locale),
-              // The brief is identical on every request, so cache it.
-              cache_control: { type: "ephemeral" },
-            },
-          ],
-          messages: history,
-        });
-
-        for await (const event of modelStream) {
-          if (
-            event.type === "content_block_delta" &&
-            event.delta.type === "text_delta"
-          ) {
-            controller.enqueue(encoder.encode(event.delta.text));
-          }
-        }
-
-        const final = await modelStream.finalMessage();
-        if (final.stop_reason === "refusal") {
-          controller.enqueue(encoder.encode(strings.refused));
+        for await (const chunk of model.stream({ locale, history })) {
+          controller.enqueue(encoder.encode(chunk));
         }
       } catch (error) {
-        console.error("[chat] stream failed", error);
+        console.error(`[chat] ${model.id} stream failed`, error);
         controller.enqueue(encoder.encode(strings.failed));
       } finally {
         controller.close();
