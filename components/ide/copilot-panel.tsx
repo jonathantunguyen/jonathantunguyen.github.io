@@ -18,7 +18,7 @@ import {
 import { Bubble, BubbleContent } from "@/components/ui/bubble";
 import { Button } from "@/components/ui/button";
 import { profile } from "@/data/profile";
-import { CLIENT_LIMIT, useChat } from "@/lib/chat-store";
+import { CLIENT_LIMIT, hasChatEndpoint, useChat } from "@/lib/chat-store";
 import { useIde } from "@/lib/ide-store";
 import { useLocale, useUi } from "@/lib/locale-context";
 import type { Dictionary } from "@/lib/i18n";
@@ -221,9 +221,14 @@ export function CopilotPanel({ onClose }: { onClose: () => void }) {
           />
           <div className="flex items-center justify-between gap-2">
             <span className="text-muted-foreground font-sans text-[10px]">
-              {remaining === null
-                ? ui.assistant.perHour(CLIENT_LIMIT)
-                : ui.assistant.left(remaining, CLIENT_LIMIT)}
+              {/* A per-hour quota only means something when a server enforces
+                  one. On the static build there's no server, so saying so
+                  would be a lie. */}
+              {!hasChatEndpoint
+                ? ui.assistant.staticNote
+                : remaining === null
+                  ? ui.assistant.perHour(CLIENT_LIMIT)
+                  : ui.assistant.left(remaining, CLIENT_LIMIT)}
             </span>
             <Button
               type="submit"

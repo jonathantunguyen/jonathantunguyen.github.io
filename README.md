@@ -12,7 +12,34 @@ cp .env.example .env.local   # then fill in ANTHROPIC_API_KEY
 npm run dev
 ```
 
-`npm run build` for a production build, `npm start` to serve it.
+`npm run build` produces a static export in `out/`.
+
+## Deploying
+
+The site is a **static export** (`output: "export"` in `next.config.ts`) served
+by GitHub Pages at https://jonathantunguyen.github.io. Pushing to `master` runs
+`.github/workflows/deploy.yml`: lint, typecheck, build, publish `out/`.
+
+Pages must be set to deploy from GitHub Actions once, by hand:
+**Settings → Pages → Build and deployment → Source: GitHub Actions.**
+
+### What the static host costs you
+
+A static host has no server, so there is no `/api/chat`. The assistant panel
+still works, but answers come from the keyword index in `lib/chat-fallback.ts`,
+matched in the browser — no model, no streaming from Claude.
+
+To get the real assistant back, deploy the API route somewhere that runs Node
+and point the client at it:
+
+1. Restore the route: `git show 6ad2569:app/api/chat/route.ts > app/api/chat/route.ts`
+2. Host it (Vercel, Cloudflare Worker, any small Node host) with
+   `ANTHROPIC_API_KEY` set.
+3. Set `NEXT_PUBLIC_CHAT_ENDPOINT` to its absolute URL and rebuild. The store
+   picks it up and switches from local answers to streamed ones.
+
+If you host the whole app there instead of Pages, drop `output: "export"` and
+the route works in place.
 
 ## Filling in the content
 

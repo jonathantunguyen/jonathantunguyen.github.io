@@ -41,5 +41,7 @@ export function usePick() {
 
 /** Where the language switcher points, preserving any deep-link hash. */
 export function otherLocalePath(locale: Locale, hash = ""): string {
-  return (locale === "en" ? "/fr" : "/") + hash;
+  // Trailing slash matters: the static export emits out/fr/index.html, so
+  // "/fr" would cost a redirect on every language switch.
+  return (locale === "en" ? "/fr/" : "/") + hash;
 }

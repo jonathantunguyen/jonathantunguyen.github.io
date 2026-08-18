@@ -1,4 +1,7 @@
 import type { MetadataRoute } from "next";
+
+// Required by output: export: generated once at build time.
+export const dynamic = "force-static";
 import { localePath, siteUrl } from "@/lib/metadata";
 
 /**

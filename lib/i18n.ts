@@ -111,6 +111,7 @@ const en = {
     limitPlaceholder: (email: string) =>
       `Question limit reached — email ${email}`,
     perHour: (limit: number) => `${limit} questions an hour`,
+    staticNote: "Answers from this site's own data files",
     left: (remaining: number, limit: number) =>
       `${remaining} of ${limit} questions left this hour`,
     thinking: "Thinking",
@@ -237,6 +238,7 @@ const fr: Dictionary = {
     limitPlaceholder: (email: string) =>
       `Limite de questions atteinte — écrivez-moi à ${email}`,
     perHour: (limit: number) => `${limit} questions par heure`,
+    staticNote: "Réponses issues des fichiers de données de ce site",
     left: (remaining: number, limit: number) =>
       `${remaining} question${remaining === 1 ? "" : "s"} sur ${limit} restante${remaining === 1 ? "" : "s"} cette heure`,
     thinking: "Réflexion",

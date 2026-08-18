@@ -2,11 +2,30 @@ import type { Metadata, Viewport } from "next";
 import { fullName, profile } from "@/data/profile";
 import { pick, type Locale } from "@/lib/i18n";
 
-export const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+/**
+ * The absolute origin used for canonical URLs, hreflang alternates, the
+ * sitemap and OG image URLs.
+ *
+ * `NEXT_PUBLIC_SITE_URL` wins, so a custom domain is a single setting. Failing
+ * that we use the domain Vercel injects at build time — which means a fresh
+ * deploy produces correct tags instead of silently advertising localhost to
+ * crawlers. Only the local fallback remains.
+ */
+function resolveSiteUrl(): string {
+  const explicit = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (explicit) return explicit.replace(/\/$/, "");
+
+  // Set by Vercel on every build; the production domain, even in previews.
+  const vercel = process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim();
+  if (vercel) return `https://${vercel.replace(/^https?:\/\//, "")}`;
+
+  return "http://localhost:3000";
+}
+
+export const siteUrl = resolveSiteUrl();
 
 /** `/` is English, `/fr` is French. */
-export const localePath: Record<Locale, string> = { en: "/", fr: "/fr" };
+export const localePath: Record<Locale, string> = { en: "/", fr: "/fr/" };
 
 const descriptions: Record<Locale, string> = {
   en: "Portfolio, projects and experience, presented as a code editor.",

@@ -1,6 +1,7 @@
 "use client";
 
 import { create } from "zustand";
+import { cannedAnswer } from "@/lib/chat-fallback";
 import { ui, type Locale } from "@/lib/i18n";
 
 export interface ChatMessage {
@@ -9,16 +10,28 @@ export interface ChatMessage {
   content: string;
 }
 
-/** Mirrors RATE_LIMIT in app/api/chat/route.ts. */
+/**
+ * Where to send questions. Unset on GitHub Pages — a static host has nowhere to
+ * run a model — in which case the panel answers from the keyword index in
+ * `lib/chat-fallback.ts`, in the browser.
+ *
+ * Point this at a deployed `/api/chat` (see README → Deploying) to get real
+ * streamed answers from Claude instead.
+ */
+const endpoint = process.env.NEXT_PUBLIC_CHAT_ENDPOINT;
+
+export const hasChatEndpoint = Boolean(endpoint);
+
+/** Mirrors RATE_LIMIT in the chat route; only meaningful when one exists. */
 const CLIENT_LIMIT = 10;
 
 interface ChatState {
   messages: ChatMessage[];
-  /** True from submit until the stream closes. */
+  /** True from submit until the answer is complete. */
   streaming: boolean;
   /** Pre-flight failures (rate limit, bad request) shown above the composer. */
   error: string | null;
-  /** Server's remaining-message count; null until the first reply. */
+  /** Server's remaining-message count; null when there's no server. */
   remaining: number | null;
 
   send: (question: string, locale: Locale) => Promise<void>;
@@ -62,11 +75,23 @@ export const useChat = create<ChatState>((set, get) => ({
         ),
       }));
 
-    // The locale comes from the route, handed down by the panel.
     const strings = ui(locale).assistant;
 
+    // Static build: answer locally, revealed a few words at a time so the panel
+    // behaves the way it does against a real model.
+    if (!endpoint) {
+      const answer = cannedAnswer(text, locale);
+      const words = answer.split(" ");
+      for (let i = 0; i < words.length; i += 3) {
+        await new Promise((resolve) => setTimeout(resolve, 45));
+        appendToReply((i === 0 ? "" : " ") + words.slice(i, i + 3).join(" "));
+      }
+      set({ streaming: false });
+      return;
+    }
+
     try {
-      const response = await fetch("/api/chat", {
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
