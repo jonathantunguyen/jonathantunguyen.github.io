@@ -18,7 +18,10 @@ export interface ChatMessage {
  * branch can borrow this one's endpoint. Set it to an empty string to force the
  * offline keyword index in `lib/chat-fallback.ts`.
  */
-const endpoint = process.env.NEXT_PUBLIC_CHAT_ENDPOINT ?? "/api/chat";
+// Trailing slash is deliberate: `trailingSlash: true` makes Next 308-redirect
+// "/api/chat" to "/api/chat/", so omitting it costs a round trip on every
+// message and breaks any client that does not follow redirects.
+const endpoint = process.env.NEXT_PUBLIC_CHAT_ENDPOINT ?? "/api/chat/";
 
 export const hasChatEndpoint = Boolean(endpoint);
 
