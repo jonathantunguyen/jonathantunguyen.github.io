@@ -112,6 +112,16 @@ The brief is built per locale and the model is told which language to answer
 in, so a visitor on `/fr` gets a French answer. The panel reads the locale from
 the route and passes it to the store, which sends it with each request.
 
+- **Response depth** is set in three places, and they have to agree: the
+  response rules in `lib/portfolio-context.ts`, the thinking effort and token
+  ceiling in `lib/chat-providers.ts`, and the keyword answers in
+  `lib/chat-fallback.ts`. Answers default to substantive — direct answer, then
+  the specifics from the brief, then a pointer to the file or project that goes
+  deeper. The rules are explicit that richer means more of the brief, never
+  more than the brief.
+- **No markdown** in answers: the panel renders text literally
+  (`whitespace-pre-wrap`), so emphasis and headings would arrive as stray
+  punctuation. Dash-prefixed lines are the one bit of structure that survives.
 - **Only one key set?** The chosen provider falls back to the other one and
   logs why, so setting just `ANTHROPIC_API_KEY` works without touching
   `CHAT_PROVIDER`.

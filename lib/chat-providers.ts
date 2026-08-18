@@ -26,8 +26,12 @@ export type ProviderId = (typeof providerIds)[number];
 
 export const defaultProvider: ProviderId = "gemini";
 
-/** Answers are short and factual; this is a ceiling, not a target. */
-const MAX_TOKENS = 2048;
+/**
+ * Headroom for a full answer. Answers are meant to be substantive (see the
+ * response rules in `lib/portfolio-context.ts`), and a truncated reply reads
+ * like a bug, so this sits well above what a long answer needs.
+ */
+const MAX_TOKENS = 4096;
 
 const GEMINI_MODEL = process.env.GEMINI_MODEL?.trim() || "gemini-3.7-flash";
 const ANTHROPIC_MODEL =
@@ -57,10 +61,17 @@ export interface ChatProvider {
  * Thinking is configured differently per model family, and sending the wrong
  * field is a 400 — so only send one when the model is recognised. `*-latest`
  * aliases and anything unknown keep the model's own default.
+ *
+ * Set to think a little: the answer has to hold a long brief in view and pull
+ * the relevant threads out of it, which is exactly what the floor settings
+ * (`MINIMAL`, or a zero budget) are bad at.
  */
 function geminiThinking(model: string): ThinkingConfig | undefined {
-  if (model.startsWith("gemini-3")) return { thinkingLevel: ThinkingLevel.LOW };
-  if (model.startsWith("gemini-2.5-flash")) return { thinkingBudget: 0 };
+  if (model.startsWith("gemini-3")) {
+    return { thinkingLevel: ThinkingLevel.MEDIUM };
+  }
+  // -1 is the SDK's "automatic"; 0 would disable thinking entirely.
+  if (model.startsWith("gemini-2.5-flash")) return { thinkingBudget: -1 };
   return undefined;
 }
 
@@ -132,9 +143,10 @@ function anthropicProvider(apiKey: string): ChatProvider {
       const modelStream = client.messages.stream({
         model: ANTHROPIC_MODEL,
         max_tokens: MAX_TOKENS,
-        // Adaptive thinking stays on (the default on this model); `low` effort
-        // keeps a short factual answer from turning into a long deliberation.
-        output_config: { effort: "low" },
+        // Adaptive thinking stays on (the default on this model). `medium`
+        // effort buys the cross-referencing a substantive answer needs; `low`
+        // tended to grab the first matching line in the brief and stop.
+        output_config: { effort: "medium" },
         system: [
           {
             type: "text",
