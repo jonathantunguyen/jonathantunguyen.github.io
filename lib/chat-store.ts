@@ -11,14 +11,14 @@ export interface ChatMessage {
 }
 
 /**
- * Where to send questions. Unset on GitHub Pages — a static host has nowhere to
- * run a model — in which case the panel answers from the keyword index in
- * `lib/chat-fallback.ts`, in the browser.
+ * Where to send questions.
  *
- * Point this at a deployed `/api/chat` (see README → Deploying) to get real
- * streamed answers from Claude instead.
+ * This branch ships a server, so it defaults to the app's own route. Override
+ * it to call a chat API hosted elsewhere — that's how the static `master`
+ * branch can borrow this one's endpoint. Set it to an empty string to force the
+ * offline keyword index in `lib/chat-fallback.ts`.
  */
-const endpoint = process.env.NEXT_PUBLIC_CHAT_ENDPOINT;
+const endpoint = process.env.NEXT_PUBLIC_CHAT_ENDPOINT ?? "/api/chat";
 
 export const hasChatEndpoint = Boolean(endpoint);
 

@@ -16,30 +16,45 @@ npm run dev
 
 ## Deploying
 
-The site is a **static export** (`output: "export"` in `next.config.ts`) served
-by GitHub Pages at https://jonathantunguyen.github.io. Pushing to `master` runs
-`.github/workflows/deploy.yml`: lint, typecheck, build, publish `out/`.
+Two branches, two hosts, one difference between them:
 
-Pages must be set to deploy from GitHub Actions once, by hand:
-**Settings → Pages → Build and deployment → Source: GitHub Actions.**
+| Branch | Host | Assistant |
+| --- | --- | --- |
+| `master` | GitHub Pages (static export) | Keyword index, in the browser |
+| `vercel` | Vercel (Node) | Streams from Claude via `app/api/chat` |
 
-### What the static host costs you
+**You are on `vercel`.** `next.config.ts` here omits `output: "export"`, so the
+app keeps its server and the route exists.
 
-A static host has no server, so there is no `/api/chat`. The assistant panel
-still works, but answers come from the keyword index in `lib/chat-fallback.ts`,
-matched in the browser — no model, no streaming from Claude.
+### Setting it up on Vercel
 
-To get the real assistant back, deploy the API route somewhere that runs Node
-and point the client at it:
+1. Import the repo at vercel.com/new. Framework detection handles the rest —
+   no `vercel.json` needed.
+2. Set the **Production Branch** to `vercel` (Settings → Git), or Vercel will
+   build `master` and you'll get the static version.
+3. Add environment variables (Settings → Environment Variables):
+   - `ANTHROPIC_API_KEY` — required for real answers. Without it the route
+     serves keyword answers instead of failing.
+   - `NEXT_PUBLIC_SITE_URL` — only for a custom domain. Otherwise the build
+     picks up Vercel's production domain automatically.
+4. Deploy.
 
-1. Restore the route: `git show 6ad2569:app/api/chat/route.ts > app/api/chat/route.ts`
-2. Host it (Vercel, Cloudflare Worker, any small Node host) with
-   `ANTHROPIC_API_KEY` set.
-3. Set `NEXT_PUBLIC_CHAT_ENDPOINT` to its absolute URL and rebuild. The store
-   picks it up and switches from local answers to streamed ones.
+The Hobby plan is free and fits a personal portfolio, but it is licensed for
+non-commercial use — check vercel.com/pricing before putting anything
+commercial on it. Note that Claude tokens are billed to your Anthropic account
+whatever the host: with the 10 questions/hour/IP limit and a cached brief,
+portfolio traffic costs cents, not zero.
 
-If you host the whole app there instead of Pages, drop `output: "export"` and
-the route works in place.
+### Keeping the branches in sync
+
+Content lives in `data/`, which both branches share. Edit on one and merge:
+
+```bash
+git switch vercel && git merge master   # or the reverse
+```
+
+Expect conflicts only in `next.config.ts` and the endpoint default in
+`lib/chat-store.ts` — the two files that intentionally differ.
 
 ## Filling in the content
 
