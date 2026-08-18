@@ -14,24 +14,48 @@ export function HomePane() {
   const openFile = useIde((s) => s.openFile);
   const ui = useUi();
   const pick = usePick();
+  const primaryRole = profile.roles[0] ? pick(profile.roles[0]) : null;
+  const showsSubtitle = Boolean(profile.company && primaryRole);
 
   return (
     <Pane title="Home">
       <CommentLine>{ui.panes.homeComment}</CommentLine>
 
-      <h1 className="font-heading text-[clamp(2.75rem,11vw,6.5rem)] leading-[0.9] tracking-tight">
+      {/* Ceiling pulled down from 6.5rem: at the old size the name alone ate a
+          fifth of the viewport and pushed the bio below the midpoint. */}
+      <h1 className="font-heading text-[clamp(2.25rem,8vw,5rem)] leading-[0.9] tracking-tight">
         <span className="text-foreground block">{profile.firstName}</span>
         <span className="text-brand-2 block">{profile.lastName}</span>
       </h1>
 
+      {/* The company used to be a chip that wrapped onto its own row, reading
+          as a layout accident. As a subtitle it can also be a link to the role
+          it belongs to — a recruiter's likeliest second click. */}
+      {showsSubtitle && (
+        <p className="text-muted-foreground mt-3 text-base sm:text-lg">
+          {primaryRole} {ui.panes.atCompany}{" "}
+          <button
+            type="button"
+            onClick={() => openFile("experience")}
+            className="text-brand-2 focus-visible:ring-ring rounded font-medium underline decoration-dotted underline-offset-4 hover:decoration-solid focus-visible:ring-2 focus-visible:outline-none"
+          >
+            {profile.company}
+          </button>
+        </p>
+      )}
+
       <div className="bg-brand mt-5 mb-5 h-0.5 w-full max-w-xl" />
 
+      {/* The primary role is already in the subtitle above, so it would only
+          repeat itself here. Indexes stay put so the dot colours don't shift. */}
       <div className="flex flex-wrap gap-2">
-        {profile.roles.map((role, i) => (
+        {profile.roles.map((role, i) => ({ role, i }))
+          .filter(({ i }) => !(showsSubtitle && i === 0))
+          .map(({ role, i }) => (
           <Badge
             key={pick(role)}
             variant="outline"
-            className="h-7 gap-2 rounded-md px-3"
+            className="h-7 gap-2 rounded-md px-3 font-mono"
           >
             <span
               aria-hidden
@@ -49,17 +73,7 @@ export function HomePane() {
         ))}
       </div>
 
-      {profile.company && (
-        <Badge
-          variant="outline"
-          className="border-brand-2/40 text-brand-2 mt-2 h-7 gap-2 rounded-md px-3"
-        >
-          <span aria-hidden className="bg-brand-2 size-1.5 rounded-full" />@{" "}
-          {profile.company}
-        </Badge>
-      )}
-
-      <p className="text-muted-foreground mt-7 text-sm sm:text-base">
+      <p className="text-muted-foreground mt-7 font-mono text-sm sm:text-base">
         {pick(profile.tagline)} <span className="caret text-brand">|</span>
       </p>
 
@@ -93,7 +107,7 @@ export function HomePane() {
             <dd className="font-heading text-3xl leading-none">{stat.value}</dd>
             <span
               aria-hidden
-              className="text-muted-foreground text-center text-[11px] tracking-[0.18em] uppercase"
+              className="text-muted-foreground text-center font-mono text-[11px] tracking-[0.18em] uppercase"
             >
               {pick(stat.label)}
             </span>

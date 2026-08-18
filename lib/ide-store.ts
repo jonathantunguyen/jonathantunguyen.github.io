@@ -26,6 +26,8 @@ interface IdeState {
   mobilePanel: Panel | null;
 
   quickOpenOpen: boolean;
+  /** True when the palette was opened straight into Go to Symbol. */
+  quickOpenSymbols: boolean;
 
   /**
    * Transient message shown in the status bar — how a menu action confirms
@@ -45,13 +47,15 @@ interface IdeState {
   closeMobilePanel: () => void;
   isPanelOpen: (panel: Panel) => boolean;
 
-  setQuickOpenOpen: (open: boolean) => void;
+  setQuickOpenOpen: (open: boolean, symbols?: boolean) => void;
 }
 
 let flashTimer: ReturnType<typeof setTimeout> | null = null;
 
 export const useIde = create<IdeState>((set, get) => ({
-  openTabs: [defaultFileId],
+  // Two tabs on arrival, not one: with a single tab nothing demonstrates that
+  // tabs stack at all, which is half of how this site is navigated.
+  openTabs: [defaultFileId, "readme"],
   activeFile: defaultFileId,
 
   explorerOpen: true,
@@ -59,6 +63,7 @@ export const useIde = create<IdeState>((set, get) => ({
   mobilePanel: null,
 
   quickOpenOpen: false,
+  quickOpenSymbols: false,
 
   flash: null,
   setFlash: (message) => {
@@ -77,6 +82,7 @@ export const useIde = create<IdeState>((set, get) => ({
           ? state.openTabs
           : [...state.openTabs, id],
         quickOpenOpen: false,
+  quickOpenSymbols: false,
         // Opening a file from the slide-over explorer should reveal the file.
         mobilePanel: state.mobilePanel === "explorer" ? null : state.mobilePanel,
       };
@@ -122,5 +128,6 @@ export const useIde = create<IdeState>((set, get) => ({
     return panel === "explorer" ? s.explorerOpen : s.copilotOpen;
   },
 
-  setQuickOpenOpen: (open) => set({ quickOpenOpen: open }),
+  setQuickOpenOpen: (open, symbols = false) =>
+    set({ quickOpenOpen: open, quickOpenSymbols: open && symbols }),
 }));

@@ -56,7 +56,10 @@ export function TitleBar() {
       <button
         type="button"
         onClick={() => setQuickOpenOpen(true)}
-        className="border-border bg-editor/70 text-muted-foreground hover:border-brand/40 hover:text-foreground focus-visible:ring-ring mx-auto flex h-6 max-w-md flex-1 items-center justify-center gap-2 rounded-md border px-3 text-xs focus-visible:ring-2 focus-visible:outline-none"
+        // `min-w-0` matters: a flex item defaults to min-width:auto, so without
+        // it this button can't shrink below its own content and the row scrolls
+        // sideways on a phone — the inner `truncate` never gets to engage.
+        className="border-border bg-editor/70 text-muted-foreground hover:border-brand/40 hover:text-foreground focus-visible:ring-ring mx-auto flex h-6 max-w-md min-w-0 flex-1 items-center justify-center gap-2 rounded-md border px-3 text-xs focus-visible:ring-2 focus-visible:outline-none"
       >
         <Search className="text-brand size-3" />
         <span className="truncate">

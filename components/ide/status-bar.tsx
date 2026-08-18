@@ -44,8 +44,14 @@ function Clock() {
     return () => clearInterval(id);
   }, []);
 
-  // Rendered only after mount so the server and client markup agree.
-  return <span className="tabular-nums">{time ?? "--:--"}</span>;
+  // Rendered only after mount so the server and client markup agree. Hidden on
+  // the narrowest phones, where it was the last item and pushed the status bar
+  // into a horizontal scroll.
+  return (
+    <span className="hidden tabular-nums min-[380px]:inline">
+      {time ?? "--:--"}
+    </span>
+  );
 }
 
 const itemClass =

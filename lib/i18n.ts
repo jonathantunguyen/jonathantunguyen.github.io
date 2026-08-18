@@ -69,6 +69,9 @@ const en = {
     toggleAssistant: "Toggle AI assistant",
     activityBar: "Activity bar",
     openFiles: "Open files",
+    explorerHint: "These files are the sections of the site.",
+    explorerHintKeys: "to jump between them",
+    dismissHint: "Dismiss",
     close: (name: string) => `Close ${name}`,
     breadcrumb: "Breadcrumb",
     themeDark: "Tensor Dark",
@@ -82,8 +85,10 @@ const en = {
     title: "Go to file",
     description:
       "Search the files in this portfolio and press Enter to open one.",
-    placeholder: "Go to file…",
-    empty: "No matching files",
+    placeholder: "Go to file… or @ for symbols",
+    empty: "No matches",
+    symbolTitle: "Go to symbol",
+    symbolHint: "@ for symbols · Ctrl/⌘ + Shift + O",
   },
   editor: {
     noFile: "No file open",
@@ -130,6 +135,8 @@ const en = {
   },
   panes: {
     homeComment: "shipping models to production since 2018",
+    /** Joins the current role to the company in the hero subtitle. */
+    atCompany: "at",
     homeProjects: "Projects",
     homeAbout: "About Me",
     homeContact: "Contact",
@@ -139,6 +146,8 @@ const en = {
     projectsComment: "things I've built",
     projectsHeading: "Selected Work",
     projectsFeatured: "Featured",
+    projectsHighlights: (count: number) =>
+      `${count} highlight${count === 1 ? "" : "s"}`,
     skillsComment: "what I work with",
     experienceComment: "where I've worked",
     experienceHeading: "Experience",
@@ -197,6 +206,9 @@ const fr: Dictionary = {
     toggleAssistant: "Afficher ou masquer l'assistant",
     activityBar: "Barre d'activité",
     openFiles: "Fichiers ouverts",
+    explorerHint: "Ces fichiers sont les sections du site.",
+    explorerHintKeys: "pour naviguer entre elles",
+    dismissHint: "Masquer",
     close: (name: string) => `Fermer ${name}`,
     breadcrumb: "Fil d'Ariane",
     themeDark: "Tensor Sombre",
@@ -210,8 +222,10 @@ const fr: Dictionary = {
     title: "Aller au fichier",
     description:
       "Recherchez un fichier de ce portfolio et appuyez sur Entrée pour l'ouvrir.",
-    placeholder: "Aller au fichier…",
-    empty: "Aucun fichier correspondant",
+    placeholder: "Aller au fichier… ou @ pour les symboles",
+    empty: "Aucun résultat",
+    symbolTitle: "Aller au symbole",
+    symbolHint: "@ pour les symboles · Ctrl/⌘ + Maj + O",
   },
   editor: {
     noFile: "Aucun fichier ouvert",
@@ -260,6 +274,7 @@ const fr: Dictionary = {
   },
   panes: {
     homeComment: "des modèles en production depuis 2018",
+    atCompany: "chez",
     homeProjects: "Projets",
     homeAbout: "À propos",
     homeContact: "Contact",
@@ -269,6 +284,8 @@ const fr: Dictionary = {
     projectsComment: "ce que j'ai construit",
     projectsHeading: "Travaux sélectionnés",
     projectsFeatured: "À la une",
+    projectsHighlights: (count: number) =>
+      `${count} point${count === 1 ? "" : "s"} clé${count === 1 ? "" : "s"}`,
     skillsComment: "mes outils de travail",
     experienceComment: "où j'ai travaillé",
     experienceHeading: "Expérience",

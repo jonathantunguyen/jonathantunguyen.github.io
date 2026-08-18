@@ -78,14 +78,18 @@
   color-scheme: light;
   --radius: 0.375rem;
 
-  /* Surfaces, lightest to darkest */
+  /*
+   * Surfaces, lightest to darkest. The steps between them are deliberately
+   * wider than they were: at ~2% apart, the panel structure that carries the
+   * dark theme flattened into one sheet of near-white.
+   */
   --editor: #ffffff; /* editor pane */
   --background: #ffffff;
-  --sidebar: #f6f8fa; /* explorer, assistant panel */
+  --sidebar: #f1f4f7; /* explorer, assistant panel */
   --card: #f6f8fa;
   --popover: #ffffff;
-  --chrome: #eef1f4; /* title bar, activity bar, status bar */
-  --hover: #e6eaef; /* row hover in lists */
+  --chrome: #e4e9ee; /* title bar, activity bar, status bar */
+  --hover: #d8dfe6; /* row hover in lists */
   --scrollbar: #c9d1d9;
   --scrollbar-hover: #aeb8c2;
 
@@ -93,19 +97,24 @@
   --foreground: #1f2328;
   --card-foreground: #1f2328;
   --popover-foreground: #1f2328;
-  --muted-foreground: #59636e; /* comments, paths, meta */
+  /* Comments, paths, meta — and the hero tagline, which at #59636e was pale
+     enough on white to read as disabled. #4a545e measures 7.4:1. */
+  --muted-foreground: #4a545e;
 
   /* Lines */
-  --border: #d1d9e0;
-  --input: #d1d9e0;
-  --sidebar-border: #d1d9e0;
+  --border: #ccd5dd;
+  --input: #ccd5dd;
+  --sidebar-border: #ccd5dd;
 
-  /* Identity pair — darker than the dark theme's so they hold on white */
-  --brand: #0e7490; /* cyan */
+  /* Identity pair — darker than the dark theme's so they hold on white.
+     --brand is a deep teal rather than cyan: cyan lost too much punch to
+     carry a filled button, where it also has to pass contrast against white
+     text. This measures 5.1:1. */
+  --brand: #0b5f75; /* teal */
   --brand-2: #4f46e5; /* indigo */
 
   /* shadcn semantic roles */
-  --primary: #0e7490;
+  --primary: #0b5f75;
   --primary-foreground: #ffffff;
   --secondary: #e6eaef;
   --secondary-foreground: #1f2328;
@@ -113,14 +122,14 @@
   --accent: #e6eaef; /* NOTE: a hover surface, not the brand color */
   --accent-foreground: #1f2328;
   --destructive: #cf222e;
-  --ring: #0e7490;
+  --ring: #0b5f75;
 
   --sidebar-foreground: #1f2328;
-  --sidebar-primary: #0e7490;
+  --sidebar-primary: #0b5f75;
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #e6eaef;
   --sidebar-accent-foreground: #1f2328;
-  --sidebar-ring: #0e7490;
+  --sidebar-ring: #0b5f75;
 
   /* Syntax highlighting — GitHub Light values, all ≥ 4.5:1 on white */
   --syntax-green: #116329;

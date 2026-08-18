@@ -32,7 +32,7 @@ export function ContactPane() {
           size="lg"
           nativeButton={false}
           render={
-            <a href={`mailto:${profile.email}`}>
+            <a href={`mailto:${profile.email}`} className="font-mono">
               <Mail data-icon="inline-start" />
               {profile.email}
             </a>
@@ -59,7 +59,7 @@ export function ContactPane() {
         </Button>
       </div>
 
-      <p className="text-muted-foreground mt-6 flex items-center gap-2 text-sm">
+      <p className="text-muted-foreground mt-6 flex items-center gap-2 font-mono text-sm">
         <MapPin className="size-4 shrink-0" aria-hidden />
         {pick(profile.location)}
       </p>
@@ -82,7 +82,7 @@ export function ContactPane() {
                 <span className="min-w-0">
                   <span className="block text-sm">{pick(social.label)}</span>
                   {social.handle && (
-                    <span className="text-muted-foreground block truncate text-xs">
+                    <span className="text-muted-foreground block truncate font-mono text-xs">
                       {social.handle}
                     </span>
                   )}

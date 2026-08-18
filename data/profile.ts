@@ -94,7 +94,9 @@ export const profile: Profile = {
   stats: [
     { value: "8+", label: t("Years in ML", "Ans en ML") },
     { value: "6", label: t("Companies", "Entreprises") },
-    { value: "Gold", label: t("Kaggle Medal", "Médaille Kaggle") },
+    // "Gold" sat in a slot otherwise filled by numbers, weakening the pattern;
+    // the count goes in the value and the medal in the label.
+    { value: "1×", label: t("Kaggle Gold Medal", "Médaille d'or Kaggle") },
     { value: "3", label: t("Engineers Led", "Ingénieurs encadrés") },
   ],
 };

@@ -8,6 +8,7 @@ import {
 } from "@/components/panes/pane-shell";
 import { profile } from "@/data/profile";
 import { education } from "@/data/experience";
+import { symbolAnchor } from "@/lib/symbols";
 import { usePick, useUi } from "@/lib/locale-context";
 
 export function AboutPane() {
@@ -25,7 +26,7 @@ export function AboutPane() {
         ))}
       </div>
 
-      <p className="text-muted-foreground mt-6 flex items-center gap-2 text-sm">
+      <p className="text-muted-foreground mt-6 flex items-center gap-2 font-mono text-sm">
         <MapPin className="size-4 shrink-0" aria-hidden />
         {pick(profile.location)}
       </p>
@@ -35,7 +36,11 @@ export function AboutPane() {
       </SectionHeading>
       <ul className="flex flex-col gap-6">
         {education.map((entry) => (
-          <li key={entry.institution} className="flex gap-3">
+          <li
+            key={entry.institution}
+            id={symbolAnchor("education", entry.institution)}
+            className="flex scroll-mt-6 gap-3"
+          >
             <GraduationCap
               className="text-syntax-purple mt-0.5 size-5 shrink-0"
               aria-hidden
@@ -44,8 +49,8 @@ export function AboutPane() {
               <h3 className="text-sm font-semibold sm:text-base">
                 {pick(entry.qualification)}
               </h3>
-              <p className="text-brand text-sm">{entry.institution}</p>
-              <p className="text-muted-foreground mt-1 text-xs">
+              <p className="text-brand font-mono text-sm">{entry.institution}</p>
+              <p className="text-muted-foreground mt-1 font-mono text-xs">
                 {pick(entry.period)}
               </p>
               {entry.detail && (

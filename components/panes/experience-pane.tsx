@@ -7,6 +7,7 @@ import {
 } from "@/components/panes/pane-shell";
 import { Badge } from "@/components/ui/badge";
 import { roles } from "@/data/experience";
+import { symbolAnchor } from "@/lib/symbols";
 import { usePick, useUi } from "@/lib/locale-context";
 
 export function ExperiencePane() {
@@ -22,7 +23,11 @@ export function ExperiencePane() {
           editor background at 1px. */}
       <ol className="border-muted-foreground/50 flex flex-col gap-9 border-l pl-6">
         {roles.map((role) => (
-          <li key={`${role.company}-${role.title}`} className="relative">
+          <li
+            key={`${role.company}-${role.title}`}
+            id={symbolAnchor("role", `${role.company}-${role.title}`)}
+            className="relative scroll-mt-6"
+          >
             {/* Timeline node */}
             <span
               aria-hidden
@@ -37,9 +42,11 @@ export function ExperiencePane() {
               <h3 className="text-sm font-semibold sm:text-base">
                 {role.title}
                 <span className="text-muted-foreground font-normal"> · </span>
-                <span className="text-brand font-normal">{role.company}</span>
+                <span className="text-brand font-mono font-normal">
+                  {role.company}
+                </span>
               </h3>
-              <span className="text-muted-foreground flex items-center gap-2 text-xs">
+              <span className="text-muted-foreground flex items-center gap-2 font-mono text-xs">
                 {role.current && (
                   <span
                     aria-hidden
@@ -50,7 +57,7 @@ export function ExperiencePane() {
               </span>
             </div>
 
-            <p className="text-muted-foreground mt-1 text-xs">
+            <p className="text-muted-foreground mt-1 font-mono text-xs">
               {pick(role.location)}
             </p>
 
@@ -68,7 +75,7 @@ export function ExperiencePane() {
             <ul className="mt-3 flex flex-wrap gap-1.5">
               {role.stack.map((tech) => (
                 <li key={tech}>
-                  <Badge variant="secondary" className="rounded-md">
+                  <Badge variant="secondary" className="rounded-md font-mono">
                     {tech}
                   </Badge>
                 </li>

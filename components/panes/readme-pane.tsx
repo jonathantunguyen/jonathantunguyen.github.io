@@ -20,7 +20,7 @@ export function ReadmePane() {
 
   return (
     <Pane title="Readme" className="max-w-3xl">
-      <h1 className="text-2xl font-semibold">
+      <h1 className="font-mono text-2xl font-semibold">
         <span className="text-muted-foreground"># </span>
         {fullName}
       </h1>
@@ -30,21 +30,21 @@ export function ReadmePane() {
         {ui.panes.readmeIntro}
       </p>
 
-      <h2 className="mt-9 text-lg font-semibold">
+      <h2 className="mt-9 font-mono text-lg font-semibold">
         <span className="text-muted-foreground">## </span>
         {ui.panes.readmeBuiltWith}
       </h2>
       <ul className="mt-3 flex flex-wrap gap-1.5">
         {stack.map((item) => (
           <li key={item}>
-            <Badge variant="secondary" className="rounded-md">
+            <Badge variant="secondary" className="rounded-md font-mono">
               {item}
             </Badge>
           </li>
         ))}
       </ul>
 
-      <h2 className="mt-9 text-lg font-semibold">
+      <h2 className="mt-9 font-mono text-lg font-semibold">
         <span className="text-muted-foreground">## </span>
         {ui.panes.readmeShortcuts}
       </h2>
@@ -61,7 +61,7 @@ export function ReadmePane() {
         ))}
       </dl>
 
-      <h2 className="mt-9 text-lg font-semibold">
+      <h2 className="mt-9 font-mono text-lg font-semibold">
         <span className="text-muted-foreground">## </span>
         {ui.panes.readmeAssistantNote}
       </h2>

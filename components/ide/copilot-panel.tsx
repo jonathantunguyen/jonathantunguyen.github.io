@@ -128,7 +128,10 @@ export function CopilotPanel({ onClose }: { onClose: () => void }) {
       {/* Conversation */}
       <div className="min-h-0 flex-1">
         {messages.length === 0 ? (
-          <div className="h-full overflow-y-auto pb-4">
+          /* Bottom-aligned: top-aligned left ~240px of empty sidebar between
+             the last prompt chip and the composer, in the panel's best space,
+             before anyone had typed anything. */
+          <div className="flex h-full flex-col justify-end overflow-y-auto pb-4">
             <Greeting ui={ui} onPick={submit} />
           </div>
         ) : (

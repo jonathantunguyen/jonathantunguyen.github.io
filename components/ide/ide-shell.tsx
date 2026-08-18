@@ -33,6 +33,10 @@ function useShortcuts() {
       if (key === "p") {
         event.preventDefault();
         setQuickOpenOpen(!toggleQuick);
+      } else if (key === "o" && event.shiftKey) {
+        // Go to Symbol — jumps within the files, not between them.
+        event.preventDefault();
+        setQuickOpenOpen(true, true);
       } else if (key === "b") {
         event.preventDefault();
         togglePanel("explorer");

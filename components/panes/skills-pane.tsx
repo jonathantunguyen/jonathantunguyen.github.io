@@ -5,19 +5,24 @@ import { CommentLine, Pane } from "@/components/panes/pane-shell";
 import { Separator } from "@/components/ui/separator";
 import { skillGroups, syntaxVar, type Skill } from "@/data/skills";
 import { usePick, useUi } from "@/lib/locale-context";
+import { symbolAnchor } from "@/lib/symbols";
 
 /**
- * Bars start empty and fill once, on the frame after mount. The pane only
- * renders while its tab is open, so tying this to scroll position would add a
- * failure mode (and a dependency on IntersectionObserver) for no real gain.
+ * Bars start empty and fill on the frame after the pane becomes visible.
+ *
+ * Keyed on `active`, not mount: every pane is now mounted at once (so crawlers
+ * see all of them), which means mounting no longer tells us anyone is looking.
+ * Scroll position would work too but costs an IntersectionObserver and a
+ * failure mode for no real gain.
  */
-function useFillOnMount() {
+function useFillOnActive(active: boolean) {
   const [filled, setFilled] = useState(false);
 
   useEffect(() => {
+    if (!active) return;
     const frame = requestAnimationFrame(() => setFilled(true));
     return () => cancelAnimationFrame(frame);
-  }, []);
+  }, [active]);
 
   return filled;
 }
@@ -27,7 +32,9 @@ function SkillRow({ skill, revealed }: { skill: Skill; revealed: boolean }) {
 
   return (
     <li className="grid grid-cols-[1fr_auto] items-center gap-x-4 gap-y-1 sm:grid-cols-[minmax(0,1fr)_7rem_2.75rem]">
-      <span className="text-foreground/85 truncate text-sm">{skill.name}</span>
+      <span className="text-foreground/85 truncate font-mono text-sm">
+        {skill.name}
+      </span>
 
       {/* The bar is decorative; the number beside it carries the value. */}
       <div
@@ -44,7 +51,7 @@ function SkillRow({ skill, revealed }: { skill: Skill; revealed: boolean }) {
       </div>
 
       <span
-        className="text-right text-sm tabular-nums"
+        className="text-right font-mono text-sm tabular-nums"
         style={{ color }}
       >
         {skill.level}%
@@ -53,8 +60,8 @@ function SkillRow({ skill, revealed }: { skill: Skill; revealed: boolean }) {
   );
 }
 
-export function SkillsPane() {
-  const revealed = useFillOnMount();
+export function SkillsPane({ active = true }: { active?: boolean }) {
+  const revealed = useFillOnActive(active);
   const ui = useUi();
   const pick = usePick();
 
@@ -64,8 +71,12 @@ export function SkillsPane() {
 
       <div className="grid gap-x-12 gap-y-10 md:grid-cols-2">
         {skillGroups.map((group) => (
-          <div key={pick(group.title)}>
-            <h2 className="text-syntax-yellow text-sm font-semibold tracking-[0.22em] uppercase">
+          <div
+            key={pick(group.title)}
+            id={symbolAnchor("skills", pick(group.title))}
+            className="scroll-mt-6"
+          >
+            <h2 className="text-syntax-yellow font-mono text-sm font-semibold tracking-[0.22em] uppercase">
               {pick(group.title)}
             </h2>
             <Separator className="mt-2 mb-4" />
