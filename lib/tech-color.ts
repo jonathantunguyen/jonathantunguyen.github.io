@@ -15,7 +15,22 @@ const rules: [readonly string[], SyntaxColor][] = [
   [["python", "typescript", "javascript", "sql", "c#", "rust", "go", "scala"], "blue"],
   // Modelling and ML frameworks
   [
-    ["pytorch", "tensorflow", "keras", "scikit", "deep learning", "computer vision", "xgboost", "transformers"],
+    [
+      "pytorch",
+      "tensorflow",
+      "keras",
+      "scikit",
+      "deep learning",
+      "computer vision",
+      "xgboost",
+      "transformers",
+      "ocr",
+      "speech recognition",
+      "self-supervised",
+      "graph neural",
+      "recommender",
+      "nlp",
+    ],
     "orange",
   ],
   // LLM / generative
@@ -26,7 +41,20 @@ const rules: [readonly string[], SyntaxColor][] = [
     "purple",
   ],
   // Tooling and delivery
-  [["docker", "kubernetes", "mlflow", "jenkins", "ci", "terraform", "git"], "yellow",],
+  [
+    [
+      "docker",
+      "kubernetes",
+      "mlflow",
+      "jenkins",
+      // Not a bare "ci": as a substring it would tint any word containing it.
+      "ci/cd",
+      "ci-cd",
+      "terraform",
+      "git",
+    ],
+    "yellow",
+  ],
 ];
 
 export function techColor(tech: string): SyntaxColor | null {

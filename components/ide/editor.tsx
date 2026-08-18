@@ -47,7 +47,10 @@ function Gutter({
     const node = contentRef.current;
     if (!node) return;
 
-    const measure = () => setLines(Math.ceil(node.offsetHeight / LINE));
+    // Clamped as a backstop: if a future layout change ever reintroduces a
+    // measurement loop, the page stays usable instead of rendering 100k nodes.
+    const measure = () =>
+      setLines(Math.min(4000, Math.ceil(node.offsetHeight / LINE)));
     measure();
 
     // Content height changes when the tab changes, a disclosure opens, or the
@@ -128,7 +131,11 @@ export function Editor() {
       <div className="relative flex min-h-0 flex-1">
         <div ref={scrollRef} className="min-w-0 flex-1 overflow-y-auto">
           {activeFile ? (
-            <div className="flex min-h-full">
+            /* `items-start` is load-bearing: without it the content wrapper
+               stretches to the row height, the row height includes the gutter,
+               and the gutter's height comes from the measured content — a loop
+               that grew the numbering without bound. */
+            <div className="flex min-h-full items-start">
               <Gutter contentRef={contentRef} />
               <div ref={contentRef} className="min-w-0 flex-1">
                 {/*

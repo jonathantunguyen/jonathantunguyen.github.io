@@ -221,6 +221,58 @@ export const projects: Project[] = [
     links: [{ label: site, href: "https://dopikai.com/" }],
     period: t("2022 — 2024", "2022 — 2024"),
   },
+  {
+    name: t(
+      "Multilingual Speech Recognition",
+      "Reconnaissance vocale multilingue",
+    ),
+    summary: t(
+      "Speech-to-text R&D at BNP Paribas Cardif across Spanish, Italian and French, built to make call auditing affordable rather than to chase a benchmark.",
+      "R&D de reconnaissance vocale chez BNP Paribas Cardif en espagnol, italien et français, conçue pour rendre l'audit des appels abordable plutôt que pour courir après un benchmark.",
+    ),
+    highlights: t(
+      [
+        "Halved both the volume of audited calls and the cost of auditing them, with a recognition and text-audit pipeline built end to end from annotation through training.",
+        "Reached word error rates below 15% on very limited internal data, which is what made unsupervised and self-supervised methods the point rather than a nice-to-have.",
+        "Led the ML side of the work and supervised an intern and an AI resident researching self-supervised learning for speech.",
+      ],
+      [
+        "Divisé par deux le volume d'appels audités et leur coût, avec un pipeline de reconnaissance et d'audit de texte construit de bout en bout, de l'annotation à l'entraînement.",
+        "Atteint des taux d'erreur mot inférieurs à 15 % sur très peu de données internes — c'est ce qui a rendu les méthodes non supervisées et auto-supervisées essentielles plutôt qu'optionnelles.",
+        "Piloté le volet ML et encadré un stagiaire et un AI resident en recherche sur l'apprentissage auto-supervisé pour la parole.",
+      ],
+    ),
+    stack: [
+      "Python",
+      "PyTorch",
+      "Speech Recognition",
+      "Self-Supervised Learning",
+    ],
+    links: [],
+    period: t("2020 — 2021", "2020 — 2021"),
+  },
+  {
+    name: t("Document OCR Pipeline", "Pipeline OCR documentaire"),
+    summary: t(
+      "A production document-extraction pipeline at BNP Paribas Cardif: find the layout, find the text, read it, and do it at the volume an insurer actually receives.",
+      "Un pipeline d'extraction documentaire en production chez BNP Paribas Cardif : détecter la mise en page, détecter le texte, le lire — au volume que reçoit réellement un assureur.",
+    ),
+    highlights: t(
+      [
+        "Cut the time and cost of extracting information from documents by 60%.",
+        "Detected layout and text with object- and text-detection models, then read it with in-house recognition models reaching word error rates below 5%.",
+        "Owned the deployment path as well as the models — the Docker environment, the API and the CI/CD pipeline.",
+      ],
+      [
+        "Réduit de 60 % le temps et le coût d'extraction d'information depuis des documents.",
+        "Détecté la mise en page et le texte avec des modèles de détection d'objets et de texte, puis lecture par des modèles de reconnaissance maison atteignant des taux d'erreur mot inférieurs à 5 %.",
+        "Pris en charge le chemin de déploiement autant que les modèles : environnement Docker, API et pipeline CI/CD.",
+      ],
+    ),
+    stack: ["Python", "Deep Learning", "OCR", "Computer Vision", "Docker", "CI/CD"],
+    links: [],
+    period: t("2018 — 2020", "2018 — 2020"),
+  },
 ];
 
 /** Featured projects first, original order preserved within each group. */
