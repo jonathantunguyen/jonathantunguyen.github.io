@@ -16,45 +16,38 @@ npm run dev
 
 ## Deploying
 
-Two branches, two hosts, one difference between them:
+`master` is the deployable branch and runs on **Vercel**, which needs a Node
+runtime for `app/api/chat` — that's what makes the assistant stream from Claude
+instead of answering from a keyword index.
 
-| Branch | Host | Assistant |
-| --- | --- | --- |
-| `master` | GitHub Pages (static export) | Keyword index, in the browser |
-| `vercel` | Vercel (Node) | Streams from Claude via `app/api/chat` |
+### Vercel
 
-**You are on `vercel`.** `next.config.ts` here omits `output: "export"`, so the
-app keeps its server and the route exists.
-
-### Setting it up on Vercel
-
-1. Import the repo at vercel.com/new. Framework detection handles the rest —
-   no `vercel.json` needed.
-2. Set the **Production Branch** to `vercel` (Settings → Git), or Vercel will
-   build `master` and you'll get the static version.
-3. Add environment variables (Settings → Environment Variables):
+1. Import the repo at vercel.com/new. Framework detection handles the rest; no
+   `vercel.json` needed. Vercel builds the default branch, so there is nothing
+   to configure.
+2. Add environment variables (Settings → Environment Variables):
    - `ANTHROPIC_API_KEY` — required for real answers. Without it the route
-     serves keyword answers instead of failing.
+     still responds, but from `lib/chat-fallback.ts`, so a missing key looks
+     like a working deploy with a dumber assistant.
    - `NEXT_PUBLIC_SITE_URL` — only for a custom domain. Otherwise the build
      picks up Vercel's production domain automatically.
-4. Deploy.
 
-The Hobby plan is free and fits a personal portfolio, but it is licensed for
+Hobby is free and fits a personal portfolio, but it is licensed for
 non-commercial use — check vercel.com/pricing before putting anything
-commercial on it. Note that Claude tokens are billed to your Anthropic account
-whatever the host: with the 10 questions/hour/IP limit and a cached brief,
-portfolio traffic costs cents, not zero.
+commercial on it. Claude tokens bill to your Anthropic account on any host;
+with the 10 questions/hour/IP limit and a cached brief, portfolio traffic costs
+cents rather than nothing.
 
-### Keeping the branches in sync
+### The `pages` branch
 
-Content lives in `data/`, which both branches share. Edit on one and merge:
+`pages` holds a GitHub Pages variant: `output: "export"`, no API route, and a
+workflow that publishes `out/`. A static host cannot run the assistant, so
+there it answers from the keyword index in the browser. Kept in case you want
+github.io as a fallback or a redirect target; ignore it otherwise.
 
-```bash
-git switch vercel && git merge master   # or the reverse
-```
-
-Expect conflicts only in `next.config.ts` and the endpoint default in
-`lib/chat-store.ts` — the two files that intentionally differ.
+Merging content changes across: `git switch pages && git merge master`. Expect
+conflicts only in `next.config.ts` and `lib/chat-store.ts`, the two files that
+intentionally differ.
 
 ## Filling in the content
 
