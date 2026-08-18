@@ -1,14 +1,19 @@
 import type { NextConfig } from "next";
 
 /**
- * Configured for a host that can run Node — Vercel, in practice.
+ * Configured for a host that can run Node — Railway, in practice.
  *
- * The difference from the `master` branch is a single missing line:
- * `output: "export"`. Without it the app keeps its server, so
- * `app/api/chat/route.ts` exists and the assistant streams from Claude instead
- * of answering from a keyword index in the browser.
+ * The `pages` branch adds Next's static-export output mode here; this branch
+ * deliberately omits it so the app keeps its server, which is what lets
+ * `app/api/chat/route.ts` exist and stream answers from Claude instead of
+ * falling back to the in-browser keyword index.
  *
- * `trailingSlash` is kept so URLs match `master` (`/fr/`, not `/fr`) — worth
+ * Do not name that option in this file, even in a comment: Railpack decides
+ * static-vs-server by text-matching `next.config.*`, so mentioning it makes the
+ * builder serve a nonexistent `out/` directory with Caddy and the deploy fails
+ * with "/app/out: not found".
+ *
+ * `trailingSlash` is kept so URLs match `pages` (`/fr/`, not `/fr`) — worth
  * keeping identical if both branches are ever live at once.
  */
 const nextConfig: NextConfig = {
