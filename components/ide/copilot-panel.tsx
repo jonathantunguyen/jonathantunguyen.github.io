@@ -16,6 +16,7 @@ import {
   MessageScrollerViewport,
 } from "@/components/ui/message-scroller";
 import { Bubble, BubbleContent } from "@/components/ui/bubble";
+import { MarkdownText } from "@/components/markdown-text";
 import { Button } from "@/components/ui/button";
 import { profile } from "@/data/profile";
 import { CLIENT_LIMIT, hasChatEndpoint, useChat } from "@/lib/chat-store";
@@ -159,14 +160,23 @@ export function CopilotPanel({ onClose }: { onClose: () => void }) {
                             }
                             align={message.role === "user" ? "end" : "start"}
                           >
-                            <BubbleContent className="font-sans text-sm leading-relaxed whitespace-pre-wrap">
-                              {message.content ||
-                                (streaming ? (
-                                  <span className="text-muted-foreground">
-                                    {ui.assistant.thinking}
-                                    <span className="caret">…</span>
+                            <BubbleContent className="font-sans text-sm leading-relaxed">
+                              {message.content ? (
+                                message.role === "assistant" ? (
+                                  // Answers may use light Markdown; the
+                                  // visitor's own words are rendered literally.
+                                  <MarkdownText text={message.content} />
+                                ) : (
+                                  <span className="whitespace-pre-wrap">
+                                    {message.content}
                                   </span>
-                                ) : null)}
+                                )
+                              ) : streaming ? (
+                                <span className="text-muted-foreground">
+                                  {ui.assistant.thinking}
+                                  <span className="caret">…</span>
+                                </span>
+                              ) : null}
                             </BubbleContent>
                           </Bubble>
                         </MessageContent>

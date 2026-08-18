@@ -119,9 +119,14 @@ the route and passes it to the store, which sends it with each request.
   the specifics from the brief, then a pointer to the file or project that goes
   deeper. The rules are explicit that richer means more of the brief, never
   more than the brief.
-- **No markdown** in answers: the panel renders text literally
-  (`whitespace-pre-wrap`), so emphasis and headings would arrive as stray
-  punctuation. Dash-prefixed lines are the one bit of structure that survives.
+- **Light Markdown** in answers, rendered by `components/markdown-text.tsx`:
+  paragraphs, bullets, ordered lists, bold, italic, inline code, links, and
+  bare URLs and email addresses autolinked. No headings, tables or images —
+  they would look wrong in a 340px column, and the response rules say so.
+  Everything is built as React elements (never `dangerouslySetInnerHTML`) and
+  link targets are restricted to `http(s)`, so a `javascript:` URL in model
+  output renders as literal text rather than a clickable link. The renderer also
+  has to parse half-finished input, since answers stream in a token at a time.
 - **Only one key set?** The chosen provider falls back to the other one and
   logs why, so setting just `ANTHROPIC_API_KEY` works without touching
   `CHAT_PROVIDER`.
