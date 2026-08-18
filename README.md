@@ -16,38 +16,47 @@ npm run dev
 
 ## Deploying
 
-`master` is the deployable branch and runs on **Vercel**, which needs a Node
-runtime for `app/api/chat` — that's what makes the assistant stream from Claude
-instead of answering from a keyword index.
+`master` is the deployable branch and needs a Node runtime, because
+`app/api/chat` is what makes the assistant stream from Claude rather than
+answer from a keyword index.
 
-### Vercel
+### Railway
 
-1. Import the repo at vercel.com/new. Framework detection handles the rest; no
-   `vercel.json` needed. Vercel builds the default branch, so there is nothing
-   to configure.
-2. Add environment variables (Settings → Environment Variables):
+Railway runs a long-lived Node process, which suits this app better than
+serverless does — see the rate-limiter note below.
+
+1. **New Project → Deploy from GitHub repo**, pick this repo. Railway builds
+   `master`.
+2. Nixpacks detects Next.js; `railway.json` pins the build and start commands
+   anyway, plus a healthcheck on `/`. `engines.node` in `package.json` keeps it
+   off a Node too old for Next 16.
+3. **Variables** → add:
    - `ANTHROPIC_API_KEY` — required for real answers. Without it the route
      still responds, but from `lib/chat-fallback.ts`, so a missing key looks
-     like a working deploy with a dumber assistant.
-   - `NEXT_PUBLIC_SITE_URL` — only for a custom domain. Otherwise the build
-     picks up Vercel's production domain automatically.
+     like a working deploy with a duller assistant rather than an error.
+   - `NEXT_PUBLIC_SITE_URL` — **only** for a custom domain. Otherwise the build
+     reads `RAILWAY_PUBLIC_DOMAIN` and canonical tags, hreflang alternates and
+     `sitemap.xml` come out right on their own.
+4. **Settings → Networking → Generate Domain**, then deploy.
 
-Hobby is free and fits a personal portfolio, but it is licensed for
-non-commercial use — check vercel.com/pricing before putting anything
-commercial on it. Claude tokens bill to your Anthropic account on any host;
-with the 10 questions/hour/IP limit and a cached brief, portfolio traffic costs
-cents rather than nothing.
+`next start` honours Railway's injected `PORT` and binds `0.0.0.0`, so no
+custom server or Procfile is needed.
 
-### The `pages` branch
+Because the container is long-lived, the in-memory rate limiter in the route
+(10 questions/hour/IP) actually holds between requests. On serverless it resets
+whenever a new instance spins up, which makes it far weaker than it looks.
+Claude tokens bill to your Anthropic account whatever the host.
 
-`pages` holds a GitHub Pages variant: `output: "export"`, no API route, and a
-workflow that publishes `out/`. A static host cannot run the assistant, so
-there it answers from the keyword index in the browser. Kept in case you want
-github.io as a fallback or a redirect target; ignore it otherwise.
+### Other hosts
 
-Merging content changes across: `git switch pages && git merge master`. Expect
-conflicts only in `next.config.ts` and `lib/chat-store.ts`, the two files that
-intentionally differ.
+- **Vercel** — import and deploy; it builds the default branch. Same env vars;
+  `VERCEL_PROJECT_PRODUCTION_URL` is the site-URL fallback.
+- **`pages` branch** — a GitHub Pages variant: `output: "export"`, no API
+  route, a workflow that publishes `out/`. A static host cannot run the
+  assistant, so there it answers from the keyword index in the browser. Merge
+  content across with `git switch pages && git merge master`; expect conflicts
+  only in `next.config.ts` and `lib/chat-store.ts`, the two files that
+  intentionally differ.
 
 ## Filling in the content
 

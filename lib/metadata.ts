@@ -7,17 +7,20 @@ import { pick, type Locale } from "@/lib/i18n";
  * sitemap and OG image URLs.
  *
  * `NEXT_PUBLIC_SITE_URL` wins, so a custom domain is a single setting. Failing
- * that we use the domain Vercel injects at build time — which means a fresh
- * deploy produces correct tags instead of silently advertising localhost to
- * crawlers. Only the local fallback remains.
+ * that we use whatever domain the host injects at build time, so a fresh deploy
+ * produces correct tags instead of silently advertising localhost to crawlers.
  */
 function resolveSiteUrl(): string {
   const explicit = process.env.NEXT_PUBLIC_SITE_URL?.trim();
   if (explicit) return explicit.replace(/\/$/, "");
 
-  // Set by Vercel on every build; the production domain, even in previews.
-  const vercel = process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim();
-  if (vercel) return `https://${vercel.replace(/^https?:\/\//, "")}`;
+  // Injected by the host. Railway gives the service's public domain; Vercel
+  // gives the production domain even on preview builds. Either way a fresh
+  // deploy produces correct tags instead of silently advertising localhost.
+  const hosted =
+    process.env.RAILWAY_PUBLIC_DOMAIN?.trim() ||
+    process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim();
+  if (hosted) return `https://${hosted.replace(/^https?:\/\//, "")}`;
 
   return "http://localhost:3000";
 }
