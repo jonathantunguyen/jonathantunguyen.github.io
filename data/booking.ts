@@ -31,7 +31,7 @@ export interface Booking {
 }
 
 export const booking: Booking = {
-  url: "TODO: paste your Cal.com / Calendly / Google booking link here",
+  url: "https://cal.com/jonathan-tunguyen/30min",
   provider: "Cal.com",
   durationMinutes: 30,
   // REVIEW: assumed from the Paris location in data/profile.ts.
