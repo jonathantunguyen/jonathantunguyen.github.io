@@ -232,11 +232,13 @@ const canned: Canned[] = [
         ? paragraphs(
             `Vous pouvez réserver un appel de ${booking.durationMinutes} minutes ici : ${booking.url} (fuseau ${booking.timezone}).`,
             goodFor,
+            `Si aucun créneau ne convient, écrivez à ${profile.email} et ${profile.firstName} trouvera un autre moment.`,
             "meeting.ics dans la barre latérale ouvre le même calendrier dans la page.",
           )
         : paragraphs(
             `You can book a ${booking.durationMinutes}-minute call here: ${booking.url} (timezone ${booking.timezone}).`,
             goodFor,
+            `If none of the slots suit you, email ${profile.email} and ${profile.firstName} will find another time.`,
             "meeting.ics in the sidebar opens the same calendar inside the page.",
           );
     },

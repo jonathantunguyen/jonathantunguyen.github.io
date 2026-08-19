@@ -110,6 +110,7 @@ const en = {
       "Which frameworks and clouds?",
       "What was the work at Voodoo?",
       "Tell me about the Kaggle gold medal",
+      "How do I book a call?",
       "How do I get in touch?",
     ],
     label: "Ask about my work",
@@ -172,6 +173,8 @@ const en = {
       `The calendar is hosted by ${provider}. It loads only when you ask it to, so nothing third-party runs here unless you want to book.`,
     meetingLoadedNote: (provider: string) =>
       `Calendar by ${provider} — booking and reminders are handled there.`,
+    meetingNoSlot:
+      "None of the slots work — wrong timezone, or you need longer? Email me and we'll find another time:",
     meetingUnset:
       "The booking calendar isn't connected yet. Email me and we'll find a time the old-fashioned way.",
     readmeIntro:
@@ -265,6 +268,7 @@ const fr: Dictionary = {
       "Quels frameworks et quels clouds ?",
       "Quel était le travail chez Voodoo ?",
       "Parle-moi de la médaille d'or Kaggle",
+      "Comment réserver un appel ?",
       "Comment vous contacter ?",
     ],
     label: "Posez une question sur mon travail",
@@ -328,6 +332,8 @@ const fr: Dictionary = {
       `Le calendrier est hébergé par ${provider}. Il ne se charge que si vous le demandez : rien de tiers ne s'exécute ici sans votre accord.`,
     meetingLoadedNote: (provider: string) =>
       `Calendrier fourni par ${provider} — la réservation et les rappels s'y passent.`,
+    meetingNoSlot:
+      "Aucun créneau ne convient — mauvais fuseau, ou il vous faut plus de temps ? Écrivez-moi et nous trouverons autre chose :",
     meetingUnset:
       "Le calendrier de réservation n'est pas encore connecté. Écrivez-moi et nous trouverons un créneau à l'ancienne.",
     readmeIntro:

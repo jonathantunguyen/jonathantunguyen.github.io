@@ -108,6 +108,18 @@ export function MeetingPane() {
               </div>
             </div>
           )}
+
+          {/* A public calendar only fits people whose constraints match its
+              rules. Everyone else needs a route that isn't the calendar. */}
+          <p className="text-muted-foreground mt-4 max-w-3xl text-sm leading-relaxed">
+            {ui.panes.meetingNoSlot}{" "}
+            <a
+              href={`mailto:${profile.email}`}
+              className="text-brand-2 focus-visible:ring-ring rounded font-mono underline decoration-dotted underline-offset-4 hover:decoration-solid focus-visible:ring-2 focus-visible:outline-none"
+            >
+              {profile.email}
+            </a>
+          </p>
         </div>
       ) : (
         /* No link configured yet: say so plainly instead of rendering a broken

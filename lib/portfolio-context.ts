@@ -110,6 +110,7 @@ function buildContext(locale: Locale): string {
           "## Booking a meeting",
           `Visitors can book a ${booking.durationMinutes}-minute call. The booking page is ${booking.url} and it is also the meeting.ics file in the sidebar.`,
           `Timezone: ${booking.timezone}.`,
+          `If none of the offered slots suit them — wrong timezone, or they need longer than ${booking.durationMinutes} minutes — tell them to email ${profile.email} instead. Offer this whenever someone says the calendar does not work for them.`,
           "Good for:",
           ...p(booking.goodFor).map((item) => `- ${clean(item)}`),
         ].join("\n")
