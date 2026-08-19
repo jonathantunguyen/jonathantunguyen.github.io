@@ -35,7 +35,7 @@ function buildContext(locale: Locale): string {
       profile.company ? `Currently at: ${clean(profile.company)}` : null,
       `Location: ${clean(p(profile.location))}`,
       `Email: ${profile.email}`,
-      `Tagline: ${clean(p(profile.tagline))}`,
+      `Tagline: ${clean(p(profile.taglines)[0] ?? "")}`,
       `Bio: ${clean(p(profile.bio)).replace(/\*\*/g, "")}`,
       `Availability: ${clean(p(profile.availability))}`,
       "",

@@ -234,12 +234,12 @@ export const projects: Project[] = [
       [
         "Halved both the volume of audited calls and the cost of auditing them, with a recognition and text-audit pipeline built end to end from annotation through training.",
         "Reached word error rates below 15% on very limited internal data, which is what made unsupervised and self-supervised methods the point rather than a nice-to-have.",
-        "Led the ML side of the work and supervised an intern and an AI resident researching self-supervised learning for speech.",
+        "Led the ML side of the work, including the research track on self-supervised learning for speech.",
       ],
       [
         "Divisé par deux le volume d'appels audités et leur coût, avec un pipeline de reconnaissance et d'audit de texte construit de bout en bout, de l'annotation à l'entraînement.",
         "Atteint des taux d'erreur mot inférieurs à 15 % sur très peu de données internes — c'est ce qui a rendu les méthodes non supervisées et auto-supervisées essentielles plutôt qu'optionnelles.",
-        "Piloté le volet ML et encadré un stagiaire et un AI resident en recherche sur l'apprentissage auto-supervisé pour la parole.",
+        "Piloté le volet ML, y compris la recherche sur l'apprentissage auto-supervisé pour la parole.",
       ],
     ),
     stack: [

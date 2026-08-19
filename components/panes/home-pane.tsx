@@ -3,6 +3,7 @@
 import { FolderOpen, Mail, User } from "lucide-react";
 import { socialIcons } from "@/components/icon-map";
 import { CommentLine, Highlighted, Pane } from "@/components/panes/pane-shell";
+import { TypingTagline } from "@/components/panes/typing-tagline";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { profile } from "@/data/profile";
@@ -10,12 +11,27 @@ import { socials } from "@/data/socials";
 import { useIde } from "@/lib/ide-store";
 import { usePick, useUi } from "@/lib/locale-context";
 
+/**
+ * Column counts per number of stats, written out rather than built by string
+ * concatenation — Tailwind only ships classes it can see as whole literals.
+ * An odd count on mobile would leave a half-width hole, so the last tile spans
+ * the empty cell instead.
+ */
+const STAT_COLUMNS: Record<number, string> = {
+  1: "grid-cols-1",
+  2: "grid-cols-2",
+  3: "grid-cols-2 max-sm:[&>:last-child]:col-span-2 sm:grid-cols-3",
+  4: "grid-cols-2 sm:grid-cols-4",
+  5: "grid-cols-2 max-sm:[&>:last-child]:col-span-2 sm:grid-cols-5",
+};
+
 export function HomePane() {
   const openFile = useIde((s) => s.openFile);
   const ui = useUi();
   const pick = usePick();
   const primaryRole = profile.roles[0] ? pick(profile.roles[0]) : null;
   const showsSubtitle = Boolean(profile.company && primaryRole);
+  const statColumns = STAT_COLUMNS[profile.stats.length] ?? "grid-cols-2";
 
   return (
     <Pane title="Home">
@@ -74,7 +90,7 @@ export function HomePane() {
       </div>
 
       <p className="text-muted-foreground mt-7 font-mono text-sm sm:text-base">
-        {pick(profile.tagline)} <span className="caret text-brand">|</span>
+        <TypingTagline phrases={pick(profile.taglines)} />
       </p>
 
       <p className="mt-6 max-w-2xl text-sm leading-relaxed sm:text-base">
@@ -97,7 +113,9 @@ export function HomePane() {
       </div>
 
       {/* Stat grid */}
-      <dl className="border-border mt-10 grid grid-cols-2 divide-x divide-y divide-[var(--border)] border sm:grid-cols-4 sm:divide-y-0">
+      <dl
+        className={`border-border mt-10 grid divide-x divide-y divide-[var(--border)] border sm:divide-y-0 ${statColumns}`}
+      >
         {profile.stats.map((stat) => (
           <div
             key={stat.value + pick(stat.label)}

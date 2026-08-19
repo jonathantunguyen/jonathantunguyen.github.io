@@ -68,9 +68,13 @@ All content lives in `data/` — no component needs editing to change what the
 site says. Prose is bilingual, written as `t(english, french)`:
 
 ```ts
-tagline: t("Machine learning that survives production",
-           "Du machine learning qui survit à la production"),
+availability: t("Always happy to talk about applied ML.",
+                "Toujours partant pour discuter de ML appliqué."),
 ```
+
+A few fields take a list rather than a sentence. `taglines` is one: the hero
+types through the phrases and loops, so the first entry is the one that shows
+before JavaScript runs and the one the assistant quotes.
 
 Values that read the same in both languages (a company, a tech name, a URL)
 stay plain strings. TypeScript enforces that both locales exist, so a missing
