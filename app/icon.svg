@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- The tile: same surface as the OG card, with a hairline edge so it
+       doesn't melt into dark tab bars. -->
+  <rect width="64" height="64" rx="14" fill="#0d1117"/>
+  <rect x="0.75" y="0.75" width="62.5" height="62.5" rx="13.25" fill="none" stroke="#30363d" stroke-width="1.5"/>
+  <!-- "J", drawn as a path so no font is needed. -->
+  <path d="M 24 15 H 44 M 38 15 V 34 Q 38 45 29.5 45 Q 23 45 22.5 38"
+        fill="none" stroke="#e6edf3" stroke-width="7" stroke-linecap="round"/>
+  <!-- The cyan rule from the OG card. -->
+  <rect x="22" y="52" width="24" height="5" rx="2.5" fill="#22d3ee"/>
+</svg>
